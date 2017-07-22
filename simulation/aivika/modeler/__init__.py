@@ -4,3 +4,4 @@
 
 from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
+from simulation.aivika.modeler.stream_port import *

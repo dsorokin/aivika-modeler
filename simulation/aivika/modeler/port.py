@@ -5,9 +5,8 @@
 class InvalidPortException(Exception):
     """Raised when the port is invalid."""
 
-    def __init__(self, name, message):
+    def __init__(self, message):
         """Initializes a new instance."""
-        self.name = name
         self.message = message
 
 class Port:
@@ -61,15 +60,12 @@ class Port:
             self._comp = comp
             self._model.add_var(self._mangled_name, comp)
         else:
-            raise InvalidPortException(self._name,
-                'Port ' + self._name + ' is already defined')
+            raise InvalidPortException('Port ' + self._name + ' is already defined')
 
     def connect_to(self, in_port):
         """Connect this port to another input port."""
         if self._data_type != in_port._data_type:
-            raise InvalidPortException(self._name,
-                'Port ' + in_port._name +
-                ' is expected to have data type ' + self._data_type)
+            raise InvalidPortException('Expected ' + in_port._name + ' to have data type ' + self._data_type)
         else:
             in_port.write('return ' + self.read())
 
@@ -101,16 +97,14 @@ class PortOnce(Port):
     def bind_to_input(self):
         """Bind the port to its input."""
         if self._input_bound:
-            raise InvalidPortException(self._name,
-                'Port ' + self._name + ' is already bound to its input')
+            raise InvalidPortException('Port ' + self._name + ' is already bound to its input')
         else:
             self._input_bound = True
 
     def bind_to_output(self):
         """Bind the port to its output."""
         if self._output_bound:
-            raise InvalidPortException(self._name,
-                'Port ' + self._name + ' is already bound to its output')
+            raise InvalidPortException('Port ' + self._name + ' is already bound to its output')
         else:
             self._output_bound = True
 
