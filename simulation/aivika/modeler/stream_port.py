@@ -19,8 +19,14 @@ def empty_stream(model, item_data_type):
     if not (base_comp is None):
         data_type.append(base_comp)
     data_type.append(item_data_type)
+    data_type_code = []
+    data_type_code.append('Simulation')
+    if not (base_comp is None):
+        data_type_code.append(base_comp)
+    data_type_code.append('(' + ' '.join(data_type) + ')')
+    data_type_code = ' '.join(data_type_code)
     y = PortOnce(model, data_type)
-    y.write('return emptyStream')
+    y.write('return emptyStream :: ' + data_type_code)
     return y
 
 def terminate_stream(port):
@@ -90,6 +96,6 @@ def merge_streams(ports):
         y.bind_to_input()
         code = ', '.join([ port.read() for port in ports ])
         code = '[' + code + ']'
-        code = 'return $ mergeStreams ' + code
+        code = 'return $ concatStreams ' + code
         y.write(code)
         return y
