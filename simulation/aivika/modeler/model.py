@@ -108,10 +108,7 @@ class MainModel(Model):
                 code += source
             else:
                 code += ',\n' + indent + ' ' + source
-        if first:
-            code += ']'
-        else:
-            code += '\n' + indent + ']'
+        code += ']'
         return code
 
 class SubModel(Model):
