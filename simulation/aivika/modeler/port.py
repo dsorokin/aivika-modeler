@@ -113,3 +113,14 @@ class PortOnce(Port):
         self.bind_to_output()
         in_port.bind_to_input()
         Port._connect_to(self, in_port)
+
+class SourcePort(Port):
+    """It represents the port that can be a result source."""
+
+    def __init__(self, model, data_type, name = None, descr = None, comp = None):
+        """Initializes a new port."""
+        Port.__init__(self, model, data_type, name, descr, comp)
+
+    def add_result_source(self):
+        """Add this port to the result sources."""
+        Port._add_result_source(self)
