@@ -62,14 +62,14 @@ class Port:
         else:
             raise InvalidPortException('Port ' + self._name + ' is already defined')
 
-    def connect_to(self, in_port):
+    def _connect_to(self, in_port):
         """Connect this port to another input port."""
         if self._data_type != in_port._data_type:
             raise InvalidPortException('Expected ' + in_port._name + ' to have data type ' + self._data_type)
         else:
             in_port.write('return ' + self.read())
 
-    def add_result_source(self):
+    def _add_result_source(self):
         """Add this port to the result sources."""
         name = '"' + self._encode_str(self._mangled_name) + '"'
         descr = '"' + self._encode_str(self._descr) + '"'
@@ -112,4 +112,4 @@ class PortOnce(Port):
         """Connect this port to another input port."""
         self.bind_to_output()
         in_port.bind_to_input()
-        Port.connect_to(self, in_port)
+        Port._connect_to(self, in_port)
