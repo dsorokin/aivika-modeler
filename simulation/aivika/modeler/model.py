@@ -169,7 +169,7 @@ class SubModel(Model):
         """Initializes a new sub-model."""
         self._main_model = model.get_main_model()
         self._model = model
-        self._var_prefix = '__comp_' + str(SubModel._next_id) + '_'
+        self._var_prefix = '_sub_' + str(SubModel._next_id) + '_'
         SubModel._next_id += 1
 
     def get_main_model(self):

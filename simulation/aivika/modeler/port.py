@@ -19,7 +19,7 @@ class Port:
         self._model = model
         self._data_type = data_type
         if name is None:
-            self._name = '__port_' + str(Port._next_id)
+            self._name = '_port_' + str(Port._next_id)
             Port._next_id += 1
         else:
             self._name = name
