@@ -77,7 +77,7 @@ class MainModel(Model):
         """Add the specified action."""
         self._actions.append(action)
 
-    def add_source(self, source):
+    def add_result_source(self, source):
         """Add the specified result source."""
         self._sources.append(source)
 
@@ -162,6 +162,6 @@ class SubModel(Model):
         """Add the specified action."""
         self._main_model.add_action(action)
 
-    def add_source(self, source):
+    def add_result_source(self, source):
         """Add the specified result source."""
-        self._main_model.add_source(source)
+        self._main_model.add_result_source(source)

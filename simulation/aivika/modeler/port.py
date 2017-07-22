@@ -25,7 +25,10 @@ class Port:
         else:
             self._name = name
         self._mangled_name = model.get_var_prefix() + self._name
-        self._descr = descr
+        if descr is None:
+            self._descr = ''
+        else:
+            self._descr = descr
         self._comp = comp
         if comp is None:
             model.add_lazy_var(self._mangled_name)
@@ -69,6 +72,22 @@ class Port:
                 ' is expected to have data type ' + self._data_type)
         else:
             in_port.write('return ' + self.read())
+
+    def add_result_source(self):
+        """Add this port to the result sources."""
+        name = '"' + self._encode_str(self._mangled_name) + '"'
+        descr = '"' + self._encode_str(self._descr) + '"'
+        code = 'resultSource ' + name + ' ' + descr + ' ' + self._mangled_name
+        self._model.add_result_source(code)
+
+    def _encode_str(self, str):
+        """Encode the string."""
+        str = str.replace('\r\n', ' ')
+        str = str.replace('\n', ' ')
+        str = str.replace('\r', ' ')
+        str = str.replace('\\', '\\\\')
+        str = str.replace('"', '\\"')
+        return str
 
 class PortOnce(Port):
     """It represents the port that can be used as input and output only once."""
