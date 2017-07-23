@@ -5,7 +5,7 @@
 from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
 
-def expect_stream_port(port):
+def expect_stream(port):
     """Expect the port to be a stream."""
     data_type = port.get_data_type()
     if len(data_type) == 0 or data_type[0] != 'Stream':
@@ -31,7 +31,7 @@ def empty_stream(model, item_data_type):
 
 def terminate_stream(port):
     """Terminate the stream."""
-    expect_stream_port(port)
+    expect_stream(port)
     model = port.get_model()
     code = 'runProcessInStartTime $ sinkStream ' + port.get_mangled_name()
     port.bind_to_output()
@@ -39,7 +39,7 @@ def terminate_stream(port):
 
 def delay_stream(delay_interval, port):
     """Delay the stream by the specified delay interval and return a new stream."""
-    expect_stream_port(port)
+    expect_stream(port)
     model = port.get_model()
     data_type = port.get_data_type()
     code = 'return $ mapStreamM (\\a -> do { holdProcess '
@@ -54,7 +54,7 @@ def delay_stream(delay_interval, port):
 
 def split_stream(count, port):
     """Split the stream into the specified number of output streams and return them as a list."""
-    expect_stream_port(port)
+    expect_stream(port)
     model = port.get_model()
     model.add_package_import('array')
     model.add_module_import('import Data.Functor')
@@ -81,10 +81,10 @@ def merge_streams(ports):
         raise InvalidPortException('Required at least one port')
     else:
         p0 = ports[0]
-        expect_stream_port(p0)
+        expect_stream(p0)
         for i in range(1, len(ports)):
             pi = ports[i]
-            expect_stream_port(pi)
+            expect_stream(pi)
             if p0.get_model() != pi.get_model():
                 raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + pi.get_name() + ' to belong to the same model')
             if p0.get_data_type() != pi.get_data_type():
