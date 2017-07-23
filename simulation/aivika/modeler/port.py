@@ -10,7 +10,7 @@ class InvalidPortException(Exception):
         self.message = message
 
 class Port:
-    """It represents the port."""
+    """The simulation port."""
 
     _next_id = 1
 
@@ -86,7 +86,7 @@ class Port:
         return str
 
 class PortOnce(Port):
-    """It represents the port that can be used as input and output only once."""
+    """The port that can be used as input and output only once."""
 
     def __init__(self, model, data_type, name = None, descr = None, comp = None):
         """Initializes a new port."""
@@ -115,7 +115,7 @@ class PortOnce(Port):
         Port._connect_to(self, in_port)
 
 class SourcePort(Port):
-    """It represents the port that can be a result source."""
+    """The port that can be a result source."""
 
     def __init__(self, model, data_type, name = None, descr = None, comp = None):
         """Initializes a new port."""
