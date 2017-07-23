@@ -2,6 +2,8 @@
 #
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
+import os
+
 class ModelException(Exception):
     """Raised when something is invalid when creating or processing the model."""
 
@@ -102,6 +104,12 @@ class MainModel(Model):
         if len(self._lazy_var_names) > 0:
             for name in self._lazy_var_names:
                 raise InvalidVariableException('Variable ' + name + ' is used but not defined')
+
+    def generate(self, standalone = False, specs = None, filename = 'dist/Model.hs'):
+        """Generate the model file."""
+        os.makedirs(os.path.dirname(filename), exist_ok = True)
+        with open(filename, "w") as file:
+            self.write(file, standalone = standalone, specs = specs)
 
     def write(self, file, standalone = False, specs = None):
         """Write the model file."""
