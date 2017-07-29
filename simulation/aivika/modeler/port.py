@@ -76,7 +76,7 @@ class Port:
     def _connect_to(self, in_port):
         """Connect this port to another input port."""
         if self._data_type != in_port._data_type:
-            raise InvalidPortException('Expected ' + in_port._name + ' to have data type ' + self._data_type)
+            raise InvalidPortException('Expected ' + in_port._name + ' to have data type ' + encode_data_type(self._data_type))
         else:
             in_port.write('return ' + self.read())
 

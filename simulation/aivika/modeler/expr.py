@@ -30,7 +30,7 @@ def expect_expr(expr):
     if isinstance(expr, Expr):
         pass
     else:
-        raise InvalidExprException('Expected an expression: ' + expr)
+        raise InvalidExprException('Expected an expression: ' + str(expr))
 
 def return_expr(model, value):
     """Get an expression that returns the specified constant value."""

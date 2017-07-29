@@ -7,7 +7,7 @@ def expect_queue_strategy(queue_strategy):
     if queue_strategy in ['FCFS', 'LCFS', 'SIRO', 'StaticPriorities']:
         pass
     else:
-        raise InvalidPortException('Unknown queue strategy: ' + queue_strategy + ' (must be one of: FCFS, LCFS, SIRO or StaticPriorities)')
+        raise InvalidPortException('Unknown queue strategy: ' + str(queue_strategy) + ' (must be one of: FCFS, LCFS, SIRO or StaticPriorities)')
 
 def is_priority_queue_strategy(queue_strategy):
     """Test whether the queue strategy is priority."""
@@ -16,4 +16,4 @@ def is_priority_queue_strategy(queue_strategy):
     elif queue_strategy in ['StaticPriorities']:
         return True
     else:
-        raise InvalidPortException('Unknown queue strategy: ' + queue_strategy + ' (must be one of: FCFS, LCFS, SIRO or StaticPriorities)')
+        raise InvalidPortException('Unknown queue strategy: ' + str(queue_strategy) + ' (must be one of: FCFS, LCFS, SIRO or StaticPriorities)')
