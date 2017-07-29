@@ -59,10 +59,14 @@ def binary_expr(expr_1, op, expr_2):
         op = '/='
     elif op == '%':
         op = 'mod'
+    elif op == 'and':
+        op = '&&'
+    elif op == 'or':
+        op = '||'
     elif op in ['==', '<', '>', '<=', '>=', '+', '-', '*', '/']:
         pass
     else:
-        raise InvalidExprException('Unrecognized binary operator: ' + op + ' (must be one of: ==, !=, <, >, <=, >=, +, -, *, /, %)')
+        raise InvalidExprException('Unrecognized binary operator: ' + op + ' (must be one of: ==, !=, <, >, <=, >=, +, -, *, /, %, and, or)')
     code = '(\\a -> liftM2 (' + op + ') ' + e1.read('a') + ' ' + e2.read('a') + ')'
     return Expr(model, code)
 
@@ -73,10 +77,10 @@ def unary_expr(op, expr):
         op = 'negate'
     elif op == '+':
         op = 'id'
-    elif op in ['abs']:
+    elif op in ['abs', 'not']:
         pass
     else:
-        raise InvalidExprException('Unrecognized unary operator: ' + op + ' (must be one of: +, -, abs)')
+        raise InvalidExprException('Unrecognized unary operator: ' + op + ' (must be one of: +, -, abs, not)')
     model = expr.get_model()
     code = '(\\a -> fmap (' + op + ') ' + expr.read('a') + ')'
     return Expr(model, code)

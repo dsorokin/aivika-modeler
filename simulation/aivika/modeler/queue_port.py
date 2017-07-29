@@ -5,6 +5,7 @@
 from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.queue_strategy import *
+from simulation.aivika.modeler.expr import *
 from simulation.aivika.modeler.util import *
 
 def create_unbounded_queue(model, item_data_type, name, descr = None, storing_queue_strategy = 'FCFS', output_queue_strategy = 'FCFS'):
@@ -71,7 +72,7 @@ def enqueue_stream(queue_port, stream_port):
     expect_stream(s)
     expect_same_model([q, s])
     model = q.get_model()
-    code = 'consumeStream (\\a -> Q.enqueue ' + q.read() + ' a) ' + s.read()
+    code = 'consumeStream (Q.enqueue ' + q.read() + ') ' + s.read()
     code = 'runProcessInStartTime $ ' + code
     s.bind_to_output()
     model.add_action(code)
@@ -99,3 +100,27 @@ def dequeue_stream(queue_port):
     y.write(code)
     y.bind_to_input()
     return y
+
+def unbounded_queue_size(unbounded_queue_port):
+    """Return an expression that evaluates to the unbounded queue size."""
+    q = unbounded_queue_port
+    expect_unbounded_queue(q)
+    model = q.get_model()
+    code = '(\\a -> liftEvent $ IQ.queueCount ' + q.read() + ')'
+    return Expr(model, code)
+
+def queue_capacity(queue_port):
+    """Return an expression that evaluates to the bounded queue capacity."""
+    q = queue_port
+    expect_queue(q)
+    model = q.get_model()
+    code = '(\\a -> return $ Q.queueMaxCount ' + q.read() + ')'
+    return Expr(model, code)
+
+def queue_size(queue_port):
+    """Return an expression that evaluates to the bounded queue size."""
+    q = queue_port
+    expect_queue(q)
+    model = q.get_model()
+    code = '(\\a -> liftEvent $ Q.queueCount ' + q.read() + ')'
+    return Expr(model, code)
