@@ -40,6 +40,7 @@ class MainModel(Model):
         self._var_names = set()
         self._lazy_var_names = set()
         self._ports = set()
+        self._transact_types = set()
         self._add_defaults()
 
     def _add_defaults(self):
@@ -121,6 +122,10 @@ class MainModel(Model):
         """Add the specified result source."""
         self._sources.append(source)
 
+    def add_transact_type(self, transact_type):
+        """Add the specified transact type."""
+        self._transact_types.add(transact_type)
+
     def require_complete(self):
         """Require the model to be complete."""
         if len(self._lazy_var_names) > 0:
@@ -195,6 +200,7 @@ class MainModel(Model):
             file.write('specs =\n')
             specs.write(file, '  ')
             file.write('\n')
+        self._write_transact_types(file)
         self._write_model_def(file)
         file.write('\n')
         if standalone:
@@ -242,6 +248,12 @@ class MainModel(Model):
                 file.write(' ')
                 file.write(source)
         file.write(']')
+
+    def _write_transact_types(self, file):
+        """Add the transact types."""
+        for tp in self._transact_types:
+            file.write(tp.get_code())
+            file.write('\n')
 
 class SubModel(Model):
     """The sub-model."""
@@ -310,3 +322,7 @@ class SubModel(Model):
     def add_result_source(self, source):
         """Add the specified result source."""
         self._main_model.add_result_source(source)
+
+    def add_transact_type(self, transact_type):
+        """Add the specified transact type."""
+        self._main_model.add_transact_type(transact_type)

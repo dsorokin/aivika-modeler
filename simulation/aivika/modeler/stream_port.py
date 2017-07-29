@@ -7,7 +7,7 @@ from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.expr import *
 from simulation.aivika.modeler.queue_port import *
 from simulation.aivika.modeler.resource_port import *
-from simulation.aivika.modeler.util import *
+from simulation.aivika.modeler.data_type import *
 
 def empty_stream(model, item_data_type):
     """Return an empty stream by the specified model and item data type."""

@@ -6,7 +6,7 @@ from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.queue_strategy import *
 from simulation.aivika.modeler.expr import *
-from simulation.aivika.modeler.util import *
+from simulation.aivika.modeler.data_type import *
 
 def create_unbounded_queue(model, item_data_type, name, descr = None, storing_queue_strategy = 'FCFS', output_queue_strategy = 'FCFS'):
     """Return a new unbounded queue by the specified model, item data type, name and optional description.

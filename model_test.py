@@ -1,10 +1,16 @@
 #!/usr/local/bin/python3
 
+# NOTE: The model itself is quite meaningless. The purpose is
+#       to check all possible cases. Consider it like an unit-test
+
 from simulation.aivika.modeler import *
 
 model = MainModel()
 
-data_type = 'Int'
+data_type = TransactType(model, 'MyTransact')
+
+field1 = Attr(data_type, 'field1')
+field2 = Attr(data_type, 'field2', INT_TYPE)
 
 port1 = empty_stream(model, data_type)
 port2 = StreamPort(model, data_type, 'port2')
@@ -53,8 +59,14 @@ queue_expr = binary_expr(binary_expr(queue_size(q1), '<', queue_capacity(q1)),
 
 (port10a, port10b) = test_stream(queue_expr, port9b)
 
-terminate_stream(port10a)
 terminate_stream(port10b)
+
+cmp_attr_expr = binary_expr(field1.get_expr(), '>', return_expr(model, 3))
+
+(port11a, port11b) = test_stream(cmp_attr_expr, port10a)
+
+terminate_stream(port11a)
+terminate_stream(port11b)
 
 specs = Specs(0, 10, 0.1)
 

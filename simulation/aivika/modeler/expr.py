@@ -37,11 +37,6 @@ def return_expr(model, value):
     code = 'const (return ' + str(value) + ')'
     return Expr(model, code)
 
-def attr_expr(model, attr_name):
-    """Get an expression that returns the specified attribute value."""
-    code = '(\\a -> return $ ' + attr_name + ' a)'
-    return Expr(model, code)
-
 def time_expr(model):
     """Get an expression that returns the current modeling time."""
     code = 'const (liftDynamics time)'
