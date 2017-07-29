@@ -1,7 +1,7 @@
 Aivika Modeler allows building and running simulation models in Python
 
 The model written in Python is translated into its Haskell representation 
-based on using the Aivika Simulation libraries, namely 
+based on using the Aivika simulation libraries, namely 
 [aivika](http://hackage.haskell.org/package/aivika) and
 [aivika-transformers](http://hackage.haskell.org/package/aivika-transformers). 
 Then the translated model is compiled by GHC into native code and executed. 
