@@ -142,6 +142,23 @@ class SourcePort(Port):
         """Add this port to the result sources."""
         Port._add_result_source(self)
 
+def expect_same_model(ports):
+    """Expect the ports to be belong to the same model."""
+    if len(ports) > 0:
+        p0 = ports[0]
+        model = p0.get_model()
+        for p in ports:
+            if model != p.get_model():
+                raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + p.get_name() + ' to belong to the same model.')
+
+def expect_same_data_type(ports):
+    """Expect the ports to have the same data type."""
+    if len(ports) > 0:
+        p0 = ports[0]
+        for p in ports:
+            if p0.get_data_type() != p.get_data_type():
+                raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + p.get_name() + ' to be of the same data type')
+
 class StreamPort(PortOnce):
     """The stream port."""
 
@@ -221,3 +238,35 @@ def expect_unbounded_queue(unbounded_queue_port):
     data_type = q.get_data_type()
     if (not isinstance(q, UnboundedQueuePort)) or len(data_type) == 0 or data_type[0] != 'IQ.Queue':
         raise InvalidPortException('Expected ' + q.get_name() + ' to be an unbounded queue')
+
+class QueuePort(SourcePort):
+    """The bounded queue port."""
+
+    def __init__(self, model, item_data_type, capacity, input_queue_strategy, storing_queue_strategy, output_queue_strategy, name = None, descr = None, comp = None):
+        """Initializes a new port."""
+        self._item_data_type = item_data_type
+        base_comp = model.get_base_comp()
+        if base_comp is None:
+            model.add_module_import('import qualified Simulation.Aivika.Queue as Q')
+        else:
+            model.add_module_import('import qualified Simulation.Aivika.Trans.Queue as Q')
+        data_type = []
+        data_type.append('Q.Queue')
+        if not (base_comp is None):
+            data_type.append(base_comp)
+        data_type.append(input_queue_strategy)
+        data_type.append(storing_queue_strategy)
+        data_type.append(output_queue_strategy)
+        data_type.append(item_data_type)
+        SourcePort.__init__(self, model, data_type, name, descr, comp)
+
+    def get_item_data_type(self):
+        """Get the item data type"""
+        return self._item_data_type
+
+def expect_queue(queue_port):
+    """Expect the port to be a bounded queue."""
+    q = queue_port
+    data_type = q.get_data_type()
+    if (not isinstance(q, QueuePort)) or len(data_type) == 0 or data_type[0] != 'Q.Queue':
+        raise InvalidPortException('Expected ' + q.get_name() + ' to be a bounded queue')

@@ -28,17 +28,52 @@ def create_unbounded_queue(model, item_data_type, name, descr = None, storing_qu
     y.write(code)
     return y
 
+def create_queue(model, item_data_type, capacity, name, descr = None, input_queue_strategy = 'FCFS', storing_queue_strategy = 'FCFS', output_queue_strategy = 'FCFS'):
+    """Return a new bounded queue by the specified model, item data type, capacity, name and optional description.
+
+       You can also specify the strategies that will be applied when adding, storing and extracting the items
+       from the queue.
+    """
+    expect_queue_strategy(input_queue_strategy)
+    expect_queue_strategy(storing_queue_strategy)
+    expect_queue_strategy(output_queue_strategy)
+    base_comp = model.get_base_comp()
+    y = QueuePort(model, item_data_type, capacity, input_queue_strategy, storing_queue_strategy, output_queue_strategy, name = name, descr = descr)
+    comp_type = []
+    comp_type.append('Simulation')
+    if not (base_comp is None):
+        comp_type.append(base_comp)
+    comp_type.append(y.get_data_type())
+    code = 'Q.newQueue ' + input_queue_strategy + ' ' + storing_queue_strategy + ' ' + output_queue_strategy + ' ' + str(capacity)
+    code = '(runEventInStartTime $ ' + code + ') :: ' + encode_data_type (comp_type)
+    y._item_data_type = item_data_type
+    y.write(code)
+    return y
+
 def unbounded_enqueue_stream(unbounded_queue_port, stream_port):
     """Add the items from the specified stream to the given unbounded queue."""
     q = unbounded_queue_port
     s = stream_port
     expect_unbounded_queue(q)
     expect_stream(s)
+    expect_same_model([q, s])
     model = q.get_model()
-    if model != s.get_model():
-        raise InvalidPortException('Expected ports ' + q.get_name() + ' and ' + s.get_name() + ' to belong to the same model.')
     code = 'consumeStream (\\a -> liftEvent $ IQ.enqueue ' + q.read() + ' a) ' + s.read()
-    code = 'runProcessInStartTime ' + code
+    code = 'runProcessInStartTime $ ' + code
+    s.bind_to_output()
+    model.add_action(code)
+
+def enqueue_stream(queue_port, stream_port):
+    """Add the items from the specified stream to the given bounded queue."""
+    q = queue_port
+    s = stream_port
+    expect_queue(q)
+    expect_stream(s)
+    expect_same_model([q, s])
+    model = q.get_model()
+    code = 'consumeStream (\\a -> Q.enqueue ' + q.read() + ' a) ' + s.read()
+    code = 'runProcessInStartTime $ ' + code
+    s.bind_to_output()
     model.add_action(code)
 
 def unbounded_dequeue_stream(unbounded_queue_port):
@@ -48,6 +83,18 @@ def unbounded_dequeue_stream(unbounded_queue_port):
     model = q.get_model()
     item_data_type = q.get_item_data_type()
     code = 'return $ repeatProcess (IQ.dequeue ' + q.read() + ')'
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    return y
+
+def dequeue_stream(queue_port):
+    """Return a stream of items extracted from the bounded queue."""
+    q = queue_port
+    expect_queue(q)
+    model = q.get_model()
+    item_data_type = q.get_item_data_type()
+    code = 'return $ repeatProcess (Q.dequeue ' + q.read() + ')'
     y = StreamPort(model, item_data_type)
     y.write(code)
     y.bind_to_input()

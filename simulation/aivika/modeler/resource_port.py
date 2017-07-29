@@ -48,11 +48,10 @@ def request_resource(resource_port, stream_port):
     s = stream_port
     expect_resource(r)
     expect_stream(s)
+    expect_same_model([r, s])
     if r.priority_queue_strategy:
         raise InvalidPortException('Expected port ' + r.get_name() + ' to have a non-priority queue strategy: ' + r.queue_strategy)
     model = r.get_model()
-    if model != s.get_model():
-        raise InvalidPortException('Expected ports ' + r.get_name() + ' and ' + s.get_name() + ' to belong to the same model.')
     base_comp = model.get_base_comp()
     if base_comp is None:
         model.add_module_import('import qualified Simulation.Aivika.Resource as R')
@@ -80,11 +79,10 @@ def request_resource_with_priority(resource_port, priority_expr, stream_port):
     s = stream_port
     expect_resource(r)
     expect_stream(s)
+    expect_same_model([r, s])
     if not r.priority_queue_strategy:
         raise InvalidPortException('Expected port ' + r.get_name() + ' to have a priority queue strategy: ' + r.queue_strategy)
     model = r.get_model()
-    if model != s.get_model():
-        raise InvalidPortException('Expected ports ' + r.get_name() + ' and ' + s.get_name() + ' to belong to the same model.')
     base_comp = model.get_base_comp()
     if base_comp is None:
         model.add_module_import('import qualified Simulation.Aivika.Resource as R')
@@ -109,9 +107,8 @@ def release_resource(resource_port, stream_port):
     s = stream_port
     expect_resource(r)
     expect_stream(s)
+    expect_same_model([r, s])
     model = r.get_model()
-    if model != s.get_model():
-        raise InvalidPortException('Expected ports ' + r.get_name() + ' and ' + s.get_name() + ' to belong to the same model.')
     base_comp = model.get_base_comp()
     if base_comp is None:
         model.add_module_import('import qualified Simulation.Aivika.Resource as R')

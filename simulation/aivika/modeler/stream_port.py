@@ -79,13 +79,8 @@ def merge_streams(stream_ports):
     else:
         p0 = ps[0]
         expect_stream(p0)
-        for i in range(1, len(ps)):
-            pi = ps[i]
-            expect_stream(pi)
-            if p0.get_model() != pi.get_model():
-                raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + pi.get_name() + ' to belong to the same model')
-            if p0.get_data_type() != pi.get_data_type():
-                raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + pi.get_name() + ' to be of the same data type')
+        expect_same_model(ps)
+        expect_same_data_type(ps)
         model = p0.get_model()
         y = StreamPort(model, p0.get_item_data_type())
         for p in ps:

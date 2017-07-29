@@ -33,9 +33,14 @@ port6 = request_resource_with_priority(r3, priority, release_resource(r1, reques
 
 (port7a, port7b) = test_stream(return_expr(model, 'False'), port6)
 
-terminate_stream(port3)
+q1 = create_queue(model, data_type, 7, 'q1')
+
+enqueue_stream(q1, port3)
+port8 = dequeue_stream(q1)
+
 terminate_stream(port7a)
 terminate_stream(port7b)
+terminate_stream(port8)
 
 specs = Specs(0, 10, 0.1)
 
