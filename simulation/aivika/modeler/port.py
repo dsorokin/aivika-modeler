@@ -274,3 +274,40 @@ def expect_queue(queue_port):
     data_type = q.get_data_type()
     if (not isinstance(q, QueuePort)) or len(data_type) == 0 or data_type[0] != 'Q.Queue':
         raise InvalidPortException('Expected ' + q.get_name() + ' to be a bounded queue')
+
+class ServerPort(SourcePort):
+    """The server port that represents some activity."""
+
+    def __init__(self, model, state_data_type, input_data_type, output_data_type, name = None, descr = None, comp = None):
+        """Initializes a new port."""
+        self._state_data_type = state_data_type
+        self._input_data_type = input_data_type
+        self._output_data_type = output_data_type
+        base_comp = model.get_base_comp()
+        data_type = []
+        data_type.append('Server')
+        if not (base_comp is None):
+            data_type.append(base_comp)
+        data_type.append(state_data_type)
+        data_type.append(input_data_type)
+        data_type.append(output_data_type)
+        SourcePort.__init__(self, model, data_type, name, descr, comp)
+
+    def get_state_data_type(self):
+        """Get the state data type"""
+        return self._state_data_type
+
+    def get_input_data_type(self):
+        """Get the input data type"""
+        return self._input_data_type
+
+    def get_output_data_type(self):
+        """Get the output data type"""
+        return self._output_data_type
+
+def expect_server(server_port):
+    """Expect the port to be a server representing some activity."""
+    s = server_port
+    data_type = s.get_data_type()
+    if (not isinstance(s, ServerPort)) or len(data_type) == 0 or data_type[0] != 'Server':
+        raise InvalidPortException('Expected ' + s.get_name() + ' to be a server')

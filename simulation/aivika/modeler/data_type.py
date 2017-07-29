@@ -5,6 +5,8 @@
 from simulation.aivika.modeler.expr import *
 from simulation.aivika.modeler.transform import *
 
+UNIT_TYPE = '()'
+
 STRING_TYPE = 'String'
 
 DOUBLE_TYPE = 'Double'
