@@ -57,7 +57,7 @@ class TransactType:
                 else:
                     code += '\n    , '
                 code += attr.get_code()
-                code += ' :: ' + _encode_data_type_item(attr.get_data_type())
+                code += ' :: ' + encode_data_type(attr.get_data_type())
             code += '\n    }'
         code += '\n'
         return code
@@ -126,7 +126,7 @@ class OptionalAttr(Attr):
 
     def has_expr(self):
         """Return an expression that evaluates to flag indicating whether the attribute is defined."""
-        code = '(\\a -> return $ isJust $ ' + self.get_code(name) + ' a)'
+        code = '(\\a -> return $ isJust $ ' + self.get_code() + ' a)'
         return Expr(self._model, code)
 
     def get_data_type(self):
@@ -151,7 +151,14 @@ def expect_attr(attr):
 
 def encode_data_type(data_type):
     """Encode the data type represented by a list of strings."""
-    return ' '.join(map(_encode_data_type_item, data_type))
+    if isinstance(data_type, str):
+        return data_type
+    elif isinstance(data_type, list):
+        return ' '.join(map(_encode_data_type_item, data_type))
+    elif isinstance(data_type_item, TransactType):
+        return data_type_item.get_name()
+    else:
+        raise InvalidDataTypeException('Expected a legal data type: ' + str(data_type_item))
 
 def _encode_data_type_item(data_type_item):
     """Encode the data type item."""

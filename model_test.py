@@ -10,7 +10,7 @@ model = MainModel()
 data_type = TransactType(model, 'MyTransact')
 
 field1 = Attr(data_type, 'field1')
-field2 = Attr(data_type, 'field2', INT_TYPE)
+field2 = OptionalAttr(data_type, 'field2', INT_TYPE)
 
 port1 = empty_stream(model, data_type)
 port2 = StreamPort(model, data_type, 'port2')
@@ -66,7 +66,14 @@ cmp_attr_expr = binary_expr(field1.get_expr(), '>', return_expr(model, 3))
 (port11a, port11b) = test_stream(cmp_attr_expr, port10a)
 
 terminate_stream(port11a)
-terminate_stream(port11b)
+
+cmp_opt_attr = binary_expr(field2.get_expr('777'), '<', return_expr(model, 11))
+cmp_opt_attr = binary_expr(field2.has_expr(), 'and', cmp_opt_attr)
+
+(port12a, port12b) = test_stream(cmp_opt_attr, port11b)
+
+terminate_stream(port12a)
+terminate_stream(port12b)
 
 specs = Specs(0, 10, 0.1)
 
