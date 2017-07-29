@@ -34,13 +34,27 @@ port6 = request_resource_with_priority(r3, priority, release_resource(r1, reques
 (port7a, port7b) = test_stream(return_expr(model, 'False'), port6)
 
 q1 = create_queue(model, data_type, 7, 'q1')
+q2 = create_unbounded_queue(model, data_type, 'q2')
 
-enqueue_stream(q1, port3)
-port8 = dequeue_stream(q1)
+(port8a, port8b) = clone_stream(2, port3)
+
+enqueue_stream(q1, port8a)
+unbounded_enqueue_stream(q2, port8b)
+
+port9a = dequeue_stream(q1)
+port9b = unbounded_dequeue_stream(q2)
 
 terminate_stream(port7a)
 terminate_stream(port7b)
-terminate_stream(port8)
+terminate_stream(port9a)
+
+queue_expr = binary_expr(binary_expr(queue_size(q1), '<', queue_capacity(q1)),
+    'and', binary_expr(unbounded_queue_size(q2), '>', return_expr(model, 0)))
+
+(port10a, port10b) = test_stream(queue_expr, port9b)
+
+terminate_stream(port10a)
+terminate_stream(port10b)
 
 specs = Specs(0, 10, 0.1)
 
