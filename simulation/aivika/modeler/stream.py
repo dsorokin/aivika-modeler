@@ -152,7 +152,7 @@ def transform_stream(transform, stream_port):
     if (model != t.get_model()):
         raise InvalidPortException('Expected the stream ' + s.get_name() + ' to belong another model')
     item_data_type = s.get_item_data_type()
-    code = 'return $ mapStreamM (\\a -> '
+    code = 'return $ mapStreamM (\\a -> liftEvent '
     code += t.read('a')
     code += ') '
     code += s.read()
