@@ -37,7 +37,7 @@ priority = if_expr(binary_expr(return_expr(model, 10), '<',
         return_expr(model, 2),
         return_expr(model, 4))
 
-port6 = request_resource_with_priority(r3, priority, release_resource(r1, request_resource(r1, port5b)))
+port6 = release_resource(r3, request_resource_with_priority(r3, priority, release_resource(r1, request_resource(r1, port5b))))
 
 (port7a, port7b) = test_stream(return_expr(model, 'False'), port6)
 
@@ -77,6 +77,6 @@ cmp_opt_attr = binary_expr(field2.has_expr(), 'and', cmp_opt_attr)
 terminate_stream(port12a)
 terminate_stream(port12b)
 
-specs = Specs(0, 10, 0.1)
+specs = Specs(0, 100, 0.1)
 
 model.run(standalone = True, specs = specs)
