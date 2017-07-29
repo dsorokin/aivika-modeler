@@ -38,7 +38,7 @@ class TransactType:
 
     def add_attr(self, attr):
         """Add the specified attribute."""
-        expect_attr(attr)
+        expect_either_attr(attr)
         self._attrs[attr.get_name()] = attr
 
     def get_code(self):
@@ -134,20 +134,27 @@ class OptionalAttr(Attr):
         return ['Maybe', self._data_type]
 
 def expect_transact_type(transact_type):
-    """Expect the argument to define the transact type."""
+    """Expect the argument to define a transact type."""
     if isinstance(transact_type, TransactType):
         pass
     else:
         raise InvalidDataTypeException('Expected a transact data type: ' + str(transact_type))
 
-def expect_attr(attr):
-    """Expect the argument to define the attribute."""
+def expect_either_attr(attr):
+    """Expect the argument to define either an attribute or optional attribute."""
     if isinstance(attr, Attr):
         pass
     elif isinstance(attr, OptionalAttr):
         pass
     else:
-        raise InvalidDataTypeException('Expected an attribute: ' + str(attr))
+        raise InvalidDataTypeException('Expected either an attribute or optional attribute: ' + str(attr))
+
+def expect_optional_attr(attr):
+    """Expect the argument to define an optional attribute."""
+    if isinstance(attr, OptionalAttr):
+        pass
+    else:
+        raise InvalidDataTypeException('Expected an optional attribute: ' + str(attr))
 
 def encode_data_type(data_type):
     """Encode the data type represented by a list of strings."""
