@@ -7,6 +7,10 @@ based on using the Aivika simulation libraries, namely
 Then the translated model is compiled by GHC into native code and executed. 
 The simulation itself should be quite fast and efficient.
 
+For the first time, the process of compiling and preparing the model 
+for running may take a few minutes. On next time, it may take just 
+a few seconds.
+
 There is one prerequisite, though. To use Aivika Modeler, you must have 
 [Stack](http://docs.haskellstack.org/) installed on your computer.
 The main operating systems are supported: Windows, Linux and macOS.
