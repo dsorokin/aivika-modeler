@@ -3,6 +3,7 @@
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
 from simulation.aivika.modeler.expr import *
+from simulation.aivika.modeler.transform import *
 
 STRING_TYPE = 'String'
 
@@ -139,6 +140,24 @@ class Attr:
         """Return the initial value code."""
         return str(self._init_value)
 
+    def expr_transform(self, new_value_expr):
+        """Return a transform that creates a copy of the transact with a new value computed by the specified expression."""
+        func = lambda code: self._apply_expr_transform(new_value_expr, code)
+        return Transform(self._model, func)
+
+    def assign_transform(self, new_value):
+        """Return a transform that creates a copy of the transact with the specified new value."""
+        expr = return_expr(self._model, str(new_value))
+        return self.expr_transform(expr)
+
+    def _apply_expr_transform(self, new_value_expr, transact_code):
+        """Apply the expression transform."""
+        code = self._transact_type._get_impl_name()
+        code = self.get_code() + ' = y'
+        code = 'return $ x { arrivalValue = (arrivalValue x) { ' + code + ' } }'
+        code = '(let x = ' + transact_code + ' in do { y <- ' + new_value_expr.read('x') + '; ' + code + ' })'
+        return code
+
 class OptionalAttr(Attr):
     """The optional transact attribute."""
 
@@ -180,6 +199,37 @@ class OptionalAttr(Attr):
     def read_init(self):
         """Return the initial value code."""
         return 'Nothing'
+
+    def expr_transform(self, new_value_expr):
+        """Return a transform that creates a copy of the transact with a new value computed by the specified expression."""
+        func = lambda code: self._apply_expr_transform(new_value_expr, code)
+        return Transform(self._model, func)
+
+    def removal_transform(self):
+        """Return a transform that creates a copy of the transact without the current attribute."""
+        func = lambda code: self._apply_remove_transform(code)
+        return Transform(self._model, func)
+
+    def assign_transform(self, new_value):
+        """Return a transform that creates a copy of the transact with the specified new value."""
+        expr = return_expr(self._model, str(new_value))
+        return self.expr_transform(expr)
+
+    def _apply_expr_transform(self, new_value_expr, transact_code):
+        """Apply the expression transform that modifies the transact attribute."""
+        code = self._transact_type._get_impl_name()
+        code = self.get_code() + ' = Just y'
+        code = 'return $ x { arrivalValue = (arrivalValue x) { ' + code + ' } }'
+        code = '(let x = ' + transact_code + ' in do { y <- ' + new_value_expr.read('x') + '; ' + code + ' })'
+        return code
+
+    def _apply_remove_transform(self, transact_code):
+        """Apply the expression transform that removes the attribute from the transact."""
+        code = self._transact_type._get_impl_name()
+        code = self.get_code() + ' = Nothing'
+        code = 'return $ x { arrivalValue = (arrivalValue x) { ' + code + ' } }'
+        code = '(let x = ' + transact_code + ' in ' + code + ' )'
+        return code
 
 def expect_transact_type(transact_type):
     """Expect the argument to define a transact type."""

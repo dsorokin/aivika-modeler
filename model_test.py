@@ -87,7 +87,15 @@ cmp_opt_attr = binary_expr(field2.has_expr(), 'and', cmp_opt_attr)
 (port12a, port12b) = test_stream(cmp_opt_attr, port11b)
 
 terminate_stream(port12a)
-terminate_stream(port12b)
+
+port13a = transform_stream(identity_transform(model), port12b)
+port13b = transform_stream(compose_transforms(identity_transform(model), identity_transform(model)), port13a)
+port13c = transform_stream(field1.assign_transform(6.5), port13b)
+port13d = transform_stream(field2.assign_transform(10), port13c)
+port13e = transform_stream(compose_transforms(identity_transform(model), field2.removal_transform()), port13d)
+port13 = port13e
+
+terminate_stream(port13)
 
 specs = Specs(0, 100, 0.1)
 

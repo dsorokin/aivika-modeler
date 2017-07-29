@@ -5,6 +5,7 @@
 from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.expr import *
+from simulation.aivika.modeler.transform import *
 from simulation.aivika.modeler.queue import *
 from simulation.aivika.modeler.resource import *
 from simulation.aivika.modeler.data_type import *
@@ -140,3 +141,23 @@ def test_stream(test_expr, stream_port):
     code = 'runProcessInStartTime $ ' + code
     model.add_action(code)
     return (trueS, falseS)
+
+def transform_stream(transform, stream_port):
+    """Apply the specified transform to the input stream and return a new stream."""
+    t = transform
+    s = stream_port
+    expect_transform(t)
+    expect_stream(s)
+    model = s.get_model()
+    if (model != t.get_model()):
+        raise InvalidPortException('Expected the stream ' + s.get_name() + ' to belong another model')
+    item_data_type = s.get_item_data_type()
+    code = 'return $ mapStreamM (\\a -> '
+    code += t.read('a')
+    code += ') '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
