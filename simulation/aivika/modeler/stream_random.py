@@ -87,3 +87,47 @@ def erlang_random_stream(transact_type, scale, shape):
     y.bind_to_input()
     y.write(code)
     return y
+
+def poisson_random_stream(transact_type, mean_delay):
+    """Return a new stream of transacts with random delays having the Poisson distribution with the specified mean."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomPoissonStream ' + str(mean_delay)
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y
+
+def binomial_random_stream(transact_type, probability, trials):
+    """Return a new stream of transacts with random delays having the binomial distribution with the specified probability and trials."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomBinomialStream ' + str(probability) + ' ' + str(trials)
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y
+
+def gamma_random_stream(transact_type, shape, scale):
+    """Return a new stream of transacts with random delays having the Gamma distribution by the specified shape and scale."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomGammaStream ' + str(shape) + ' ' + str(scale)
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y
+
+def beta_random_stream(transact_type, alpha, beta):
+    """Return a new stream of transacts with random delays having the Beta distribution by the specified shape parameters (alpha and beta)."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomBetaStream ' + str(alpha) + ' ' + str(beta)
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y

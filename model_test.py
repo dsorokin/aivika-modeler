@@ -19,7 +19,11 @@ port1 = merge_streams([empty_stream(model, data_type),
     normal_random_stream(data_type, 5, 3),
     lognormal_random_stream(data_type, 5, 3),
     exponential_random_stream(data_type, 5),
-    erlang_random_stream(data_type, 5, 4)])
+    erlang_random_stream(data_type, 5, 4),
+    poisson_random_stream(data_type, 5),
+    binomial_random_stream(data_type, 0.2, 3),
+    gamma_random_stream(data_type, 2, 3),
+    beta_random_stream(data_type, 2, 3)])
 
 port2 = StreamPort(model, data_type, 'port2')
 port3 = StreamPort(model, data_type, 'port3')
