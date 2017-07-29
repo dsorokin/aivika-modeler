@@ -109,6 +109,19 @@ def unbounded_queue_size(unbounded_queue_port):
     code = '(\\a -> liftEvent $ IQ.queueCount ' + q.read() + ')'
     return Expr(model, code)
 
+def enqueue_stream_or_remove_item(queue_port, stream_port):
+    """Add the items from the specified stream to the given bounded queue when there is a free capacity; otherwise, remove the items."""
+    q = queue_port
+    s = stream_port
+    expect_queue(q)
+    expect_stream(s)
+    expect_same_model([q, s])
+    model = q.get_model()
+    code = 'consumeStream (liftEvent . Q.enqueueOrLost_ ' + q.read() + ') ' + s.read()
+    code = 'runProcessInStartTime $ ' + code
+    s.bind_to_output()
+    model.add_action(code)
+
 def queue_capacity(queue_port):
     """Return an expression that evaluates to the bounded queue capacity."""
     q = queue_port

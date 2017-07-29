@@ -39,12 +39,12 @@ q2 = create_unbounded_queue(model, data_type, 'q2')
 (port8a, port8b) = clone_stream(2, port3)
 
 enqueue_stream(q1, port8a)
+enqueue_stream_or_remove_item(q1, port7a)
 unbounded_enqueue_stream(q2, port8b)
 
 port9a = dequeue_stream(q1)
 port9b = unbounded_dequeue_stream(q2)
 
-terminate_stream(port7a)
 terminate_stream(port7b)
 terminate_stream(port9a)
 
