@@ -4,5 +4,9 @@
 
 from simulation.aivika.modeler.specs import *
 from simulation.aivika.modeler.model import *
+from simulation.aivika.modeler.expr import *
 from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.stream_port import *
+from simulation.aivika.modeler.queue_strategy import *
+from simulation.aivika.modeler.queue_port import *
+from simulation.aivika.modeler.resource_port import *

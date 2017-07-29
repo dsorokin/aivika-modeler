@@ -4,6 +4,8 @@
 
 import os
 
+from simulation.aivika.modeler.model_project import *
+
 class ModelException(Exception):
     """Raised when something is invalid when creating or processing the model."""
 
@@ -30,18 +32,25 @@ class MainModel(Model):
         self._base_comp = base_comp
         self._pragmas = set()
         self._package_imports = set()
+        self._package_locations = set()
+        self._extra_deps = set()
         self._module_imports = set()
         self._actions = []
         self._sources = []
         self._var_names = set()
         self._lazy_var_names = set()
-        if base_comp is None:
-            self._pragmas.add('{-# LANGUAGE RecursiveDo #-}')
-            self._package_imports.add('aivika')
+        self._add_defaults()
+
+    def _add_defaults(self):
+        """Add the defaults."""
+        self._pragmas.add('{-# LANGUAGE RecursiveDo #-}')
+        self._package_imports.add('aivika')
+        self._extra_deps.add('aivika-5.2')
+        if self._base_comp is None:
             self._module_imports.add('import Simulation.Aivika')
         else:
-            self._pragmas.add('{-# LANGUAGE RecursiveDo #-}')
             self._package_imports.add('aivika-transformers')
+            self._extra_deps.add('aivika-transformers-5.2')
             self._module_imports.add('import Simulation.Aivika.Trans')
 
     def get_main_model(self):
@@ -63,6 +72,14 @@ class MainModel(Model):
     def add_package_import(self, package):
         """Add the specified package to import."""
         self._package_imports.add(package)
+
+    def add_package_location(self, package_location):
+        """Add the specified package location."""
+        self._package_locations.add(package_location)
+
+    def add_extra_dep(self, extra_dep):
+        """Add the specified extra dependency."""
+        self._extra_deps.add(extra_dep)
 
     def add_module_import(self, module):
         """Add the specified module to import."""
@@ -105,13 +122,46 @@ class MainModel(Model):
             for name in self._lazy_var_names:
                 raise InvalidVariableException('Variable ' + name + ' is used but not defined')
 
-    def generate(self, standalone = False, specs = None, filename = 'dist/Model.hs'):
+    def run(self, standalone = False, specs = None, dirname = 'dist'):
+        """Generate and compile the project."""
+        self.generate(standalone = standalone, specs = specs, dirname = dirname)
+        cwd = os.getcwd()
+        os.chdir(dirname)
+        status = os.system('stack build')
+        if status == 0:
+            status = os.system('stack exec modeling-project-exe')
+        os.chdir(cwd)
+        return status
+
+    def compile(self, standalone = False, specs = None, dirname = 'dist'):
+        """Generate and compile the project."""
+        self.generate(standalone = standalone, specs = specs, dirname = dirname)
+        cwd = os.getcwd()
+        os.chdir(dirname)
+        status = os.system('stack build')
+        os.chdir(cwd)
+        return status
+
+    def generate(self, standalone = False, specs = None, dirname = 'dist'):
+        """Generate the project files."""
+        if standalone:
+            self._generate_model(standalone, specs, dirname + '/app/Main.hs')
+        else:
+            self._generate_model(standalone, specs, dirname + '/app/Model.hs')
+        generate_cabal_file_impl(self, dirname + '/modeling-project.cabal')
+        generate_stack_file_impl(self, dirname + '/stack.yaml')
+        generate_license_file_impl(dirname + '/LICENSE.txt')
+        generate_readme_file_impl(dirname + '/README.md')
+        generate_setup_file_impl(dirname + '/Setup.hs')
+        generate_lib_file_impl(dirname + '/src/Lib.hs')
+
+    def _generate_model(self, standalone = False, specs = None, filename = 'dist/app/Model.hs'):
         """Generate the model file."""
         os.makedirs(os.path.dirname(filename), exist_ok = True)
         with open(filename, "w") as file:
-            self.write(file, standalone = standalone, specs = specs)
+            self.write_model(file, standalone = standalone, specs = specs)
 
-    def write(self, file, standalone = False, specs = None):
+    def write_model(self, file, standalone = False, specs = None):
         """Write the model file."""
         self.require_complete()
         if standalone and (specs is None):
@@ -135,7 +185,7 @@ class MainModel(Model):
             file.write('specs =\n')
             specs.write(file, '  ')
             file.write('\n')
-        self._write_model(file)
+        self._write_model_def(file)
         file.write('\n')
         if standalone:
             file.write('main =\n')
@@ -144,13 +194,13 @@ class MainModel(Model):
             file.write('  model specs\n')
             file.write('\n')
 
-    def _write_model(self, file):
+    def _write_model_def(self, file):
         """Write the model definition in the file."""
         file.write('model =')
         file.write('\n')
-        self._write_code(file, '  ')
+        self._write_model_code(file, '  ')
 
-    def _write_code(self, file, indent = ''):
+    def _write_model_code(self, file, indent = ''):
         """Write the code in the file."""
         file.write(indent)
         file.write('mdo --')
@@ -218,6 +268,14 @@ class SubModel(Model):
     def add_package_import(self, package):
         """Add the specified package to import."""
         self._main_model.add_package_import(package)
+
+    def add_package_location(self, package_location):
+        """Add the specified package location."""
+        self._main_model.add_package_location(package_location)
+
+    def add_extra_dep(self, extra_dep):
+        """Add the specified extra dependency."""
+        self._main_model.add_extra_dep(extra_dep)
 
     def add_module_import(self, module):
         """Add the specified module to import."""
