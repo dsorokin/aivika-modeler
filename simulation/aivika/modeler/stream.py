@@ -5,8 +5,8 @@
 from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.expr import *
-from simulation.aivika.modeler.queue_port import *
-from simulation.aivika.modeler.resource_port import *
+from simulation.aivika.modeler.queue import *
+from simulation.aivika.modeler.resource import *
 from simulation.aivika.modeler.data_type import *
 
 def empty_stream(model, item_data_type):
