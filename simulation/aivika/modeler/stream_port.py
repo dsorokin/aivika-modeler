@@ -18,6 +18,7 @@ def empty_stream(model, item_data_type):
     if not (base_comp is None):
         comp_type.append(base_comp)
     comp_type.append(y.get_data_type())
+    y.bind_to_input()
     y.write('return emptyStream :: ' + encode_data_type(comp_type))
     return y
 

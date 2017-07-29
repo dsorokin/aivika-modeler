@@ -39,6 +39,7 @@ class MainModel(Model):
         self._sources = []
         self._var_names = set()
         self._lazy_var_names = set()
+        self._ports = set()
         self._add_defaults()
 
     def _add_defaults(self):
@@ -112,6 +113,10 @@ class MainModel(Model):
         """Add the specified action."""
         self._actions.append(action)
 
+    def add_port(self, port):
+        """Add the specified port for completeness test."""
+        self._ports.add(port)
+
     def add_result_source(self, source):
         """Add the specified result source."""
         self._sources.append(source)
@@ -121,6 +126,11 @@ class MainModel(Model):
         if len(self._lazy_var_names) > 0:
             for name in self._lazy_var_names:
                 raise InvalidVariableException('Variable ' + name + ' is used but not defined')
+        for port in self._ports:
+            if not port.is_bound_to_input():
+                raise InvalidVariableException('Variable ' + port.get_name() + ' must be bound to its input')
+            if not port.is_bound_to_output():
+                raise InvalidVariableException('Variable ' + port.get_name() + ' must be bound to its output')
 
     def run(self, standalone = False, specs = None, dirname = 'dist'):
         """Generate and compile the project."""
@@ -292,6 +302,10 @@ class SubModel(Model):
     def add_action(self, action):
         """Add the specified action."""
         self._main_model.add_action(action)
+
+    def add_port(self, port):
+        """Add the specified port for completeness test."""
+        self._main_model.add_port(port)
 
     def add_result_source(self, source):
         """Add the specified result source."""

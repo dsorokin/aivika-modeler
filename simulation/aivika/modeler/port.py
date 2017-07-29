@@ -50,6 +50,14 @@ class Port:
         """Return the real possibly mangled name of the port."""
         return self._mangled_name
 
+    def is_bound_to_input(self):
+        """Test whether the port is bound to its input."""
+        return True
+
+    def is_bound_to_output(self):
+        """Test whether the port is bound to its output."""
+        return True
+
     def read(self):
         """Read the variable value."""
         return self._mangled_name
@@ -59,6 +67,7 @@ class Port:
         if self._comp is None:
             self._comp = comp
             self._model.add_var(self._mangled_name, comp)
+            self._model.add_port(self)
         else:
             raise InvalidPortException('Port ' + self._name + ' is already defined')
 
@@ -107,6 +116,14 @@ class PortOnce(Port):
             raise InvalidPortException('Port ' + self._name + ' is already bound to its output')
         else:
             self._output_bound = True
+
+    def is_bound_to_input(self):
+        """Test whether the port is bound to its input."""
+        return self._input_bound
+
+    def is_bound_to_output(self):
+        """Test whether the port is bound to its output."""
+        return self._output_bound
 
     def connect_to(self, in_port):
         """Connect this port to another input port."""
