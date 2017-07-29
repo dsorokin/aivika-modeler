@@ -65,3 +65,14 @@ def lognormal_random_stream(transact_type, normal_mean_delay, normal_delay_devia
     y.bind_to_input()
     y.write(code)
     return y
+
+def exponential_random_stream(transact_type, mean_delay):
+    """Return a new stream of transacts with random delays having the exponential distribution."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomExponentialStream ' + str(mean_delay)
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y
