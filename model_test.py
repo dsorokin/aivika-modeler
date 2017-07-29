@@ -13,7 +13,9 @@ field1 = Attr(data_type, 'field1', 3)
 field2 = OptionalAttr(data_type, 'field2', INT_TYPE)
 
 port1 = merge_streams([empty_stream(model, data_type),
-    uniform_random_stream(data_type, 3, 7)])
+    uniform_random_stream(data_type, 3, 7),
+    uniform_random_int_stream(data_type, 3, 7),
+    triangular_random_stream(data_type, 3, 4, 7)])
 
 port2 = StreamPort(model, data_type, 'port2')
 port3 = StreamPort(model, data_type, 'port3')

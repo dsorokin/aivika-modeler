@@ -7,12 +7,34 @@ from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.stream import *
 from simulation.aivika.modeler.data_type import *
 
-def uniform_random_stream(transact_type, min_value, max_value):
+def uniform_random_stream(transact_type, min_delay, max_delay):
     """Return a new stream of transacts with random delays distributed uniformly."""
     expect_transact_type(transact_type)
     model = transact_type.get_model()
     code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
-    code += 'randomUniformStream ' + str(min_value) + ' ' + str(max_value)
+    code += 'randomUniformStream ' + str(min_delay) + ' ' + str(max_delay)
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y
+
+def uniform_random_int_stream(transact_type, min_delay, max_delay):
+    """Return a new stream of transacts with integer random delays distributed uniformly."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomUniformIntStream ' + str(min_delay) + ' ' + str(max_delay)
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y
+
+def triangular_random_stream(transact_type, min_delay, median_delay, max_delay):
+    """Return a new stream of transacts with random delays having the triangular distribution."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomTriangularStream ' + str(min_delay) + ' ' +  str(median_delay) + ' ' + str(max_delay)
     y = StreamPort(model, transact_type.get_data_type())
     y.bind_to_input()
     y.write(code)
