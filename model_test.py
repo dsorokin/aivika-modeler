@@ -9,10 +9,12 @@ model = MainModel()
 
 data_type = TransactType(model, 'MyTransact')
 
-field1 = Attr(data_type, 'field1')
+field1 = Attr(data_type, 'field1', 3)
 field2 = OptionalAttr(data_type, 'field2', INT_TYPE)
 
-port1 = empty_stream(model, data_type)
+port1 = merge_streams([empty_stream(model, data_type),
+    uniform_random_stream(data_type, 3, 7)])
+
 port2 = StreamPort(model, data_type, 'port2')
 port3 = StreamPort(model, data_type, 'port3')
 

@@ -2,6 +2,8 @@
 #
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
+from simulation.aivika.modeler.data_type import *
+
 class InvalidPortException(Exception):
     """Raised when the port is invalid."""
 
@@ -155,9 +157,11 @@ def expect_same_data_type(ports):
     """Expect the ports to have the same data type."""
     if len(ports) > 0:
         p0 = ports[0]
+        tp0 = encode_data_type(p0.get_data_type())
         for p in ports:
-            if p0.get_data_type() != p.get_data_type():
-                raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + p.get_name() + ' to be of the same data type')
+            tp = encode_data_type(p.get_data_type())
+            if tp0 != tp:
+                raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + p.get_name() + ' to be of the same data type: ' + tp0 + ' versus ' + tp)
 
 class StreamPort(PortOnce):
     """The stream port."""

@@ -36,6 +36,10 @@ class TransactType:
         """Return the type name."""
         return self._name
 
+    def get_data_type(self):
+        """Return the transact data type."""
+        return self._name
+
     def add_attr(self, attr):
         """Add the specified attribute."""
         expect_either_attr(attr)
@@ -78,13 +82,33 @@ class TransactType:
             file.write('\n    }')
         file.write('\n')
 
+    def coerce_arrival(self, comp):
+        """Coerce the arrival computation."""
+        code = self._get_impl_name()
+        code += ' {'
+        first = True
+        for name in self._attrs:
+            attr = self._attrs[name]
+            if first:
+                first = False
+                code += ' '
+            else:
+                code += ', '
+            code += attr.get_code()
+            code += ' = '
+            code += attr.read_init()
+        code += ' }'
+        code = '(' + comp + ' { arrivalValue = ' + code + ' })'
+        return code
+
 class Attr:
     """The transact attribute."""
 
-    def __init__(self, transact_type, name, data_type = DOUBLE_TYPE):
-        """Initializes a new attribute by the specified name and data type."""
+    def __init__(self, transact_type, name, init_value, data_type = DOUBLE_TYPE):
+        """Initializes a new attribute by the specified name, initial value and data type."""
         self._model = transact_type.get_model()
         self._name = name
+        self._init_value = init_value
         self._data_type = data_type
         self._transact_type = transact_type
         self._transact_type.add_attr(self)
@@ -110,6 +134,10 @@ class Attr:
     def get_data_type(self):
         """Return the data type."""
         return self._data_type
+
+    def read_init(self):
+        """Return the initial value code."""
+        return str(self._init_value)
 
 class OptionalAttr(Attr):
     """The optional transact attribute."""
@@ -148,6 +176,10 @@ class OptionalAttr(Attr):
     def get_data_type(self):
         """Return the data type."""
         return ['Maybe', self._data_type]
+
+    def read_init(self):
+        """Return the initial value code."""
+        return 'Nothing'
 
 def expect_transact_type(transact_type):
     """Expect the argument to define a transact type."""
