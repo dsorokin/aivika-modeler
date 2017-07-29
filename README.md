@@ -18,9 +18,9 @@ the TCP/IP protocol, then you or somebody else will have to write its
 implementation in Haskell and then create the corresponding wrapper in 
 Python so that it would be possible to use the component from Python. 
 
-There is a separation of responsibilities. Python is used as a high-level glue for 
-combining components to build the complete simulation model, while Haskell is used as 
-a high-level modeling language for writing such components.
+There is a separation of concerns. Python is used as a high-level glue for 
+combining components to build the complete simulation model, while Haskell is 
+used as a high-level modeling language for writing such components.
 
 The represented Python package is under heavy development and 
 is not ready for production use yet.
