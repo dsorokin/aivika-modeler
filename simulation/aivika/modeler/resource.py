@@ -124,3 +124,11 @@ def release_resource(resource_port, stream_port):
     y.bind_to_input()
     s.bind_to_output()
     return y
+
+def resource_count(resource_port):
+    """Return an expression that evaluates to the resource contents."""
+    r = resource_port
+    expect_resource(r)
+    model = r.get_model()
+    code = '(\\a -> liftEvent $ R.resourceCount ' + r.read() + ')'
+    return Expr(model, code)

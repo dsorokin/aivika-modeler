@@ -46,6 +46,8 @@ def binary_expr(expr_1, op, expr_2):
     """Apply the specified binary operator to the expressions."""
     e1 = expr_1
     e2 = expr_2
+    expect_expr(e1)
+    expect_expr(e2)
     if e1.get_model() != e2.get_model():
         raise InvalidExprException('Expected all expressions to belong to the same model')
     model = e1.get_model()
@@ -67,7 +69,8 @@ def binary_expr(expr_1, op, expr_2):
 
 def unary_expr(op, expr):
     """Apply the specified unary operator to the expression."""
-    model.add_module_import('import Data.Functor')
+    e = expr
+    expect_expr(e)
     if op == '-':
         op = 'negate'
     elif op == '+':
@@ -76,8 +79,9 @@ def unary_expr(op, expr):
         pass
     else:
         raise InvalidExprException('Unrecognized unary operator: ' + op + ' (must be one of: +, -, abs, not)')
-    model = expr.get_model()
-    code = '(\\a -> fmap (' + op + ') ' + expr.read('a') + ')'
+    model = e.get_model()
+    model.add_module_import('import Data.Functor')
+    code = '(\\a -> fmap (' + op + ') ' + e.read('a') + ')'
     return Expr(model, code)
 
 def if_expr(cond_expr, true_expr, false_expr):
@@ -85,10 +89,22 @@ def if_expr(cond_expr, true_expr, false_expr):
     c = cond_expr
     t = true_expr
     f = false_expr
+    expect_expr(c)
+    expect_expr(t)
+    expect_expr(f)
     if (c.get_model() != t.get_model()) or (c.get_model() != f.get_model()):
         raise InvalidExprException('Expected all expressions to belong to the same model')
     model = c.get_model()
     code = '(\\a -> do { f <- ' + c.read('a') + '; '
     code += 'if f then ' + t.read('a') + ' else ' + f.read('a')
     code += ' })'
+    return Expr(model, code)
+
+def int2double_expr(expr):
+    """Return an expression that converts the integer value to a floating-point number."""
+    e = expr
+    expect_expr(e)
+    model = e.get_model()
+    model.add_module_import('import Data.Functor')
+    code = '(\\a -> fmap (fromRational . toRational) ' + expr.read('a') + ')'
     return Expr(model, code)
