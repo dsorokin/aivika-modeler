@@ -131,3 +131,14 @@ def beta_random_stream(transact_type, alpha, beta):
     y.bind_to_input()
     y.write(code)
     return y
+
+def weibull_random_stream(transact_type, shape, scale):
+    """Return a new stream of transacts with random delays having the Weibull distribution by the specified shape and scale."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomWeibullStream ' + str(shape) + ' ' + str(scale)
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y
