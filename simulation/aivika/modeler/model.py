@@ -252,7 +252,7 @@ class MainModel(Model):
     def _write_transact_types(self, file):
         """Add the transact types."""
         for tp in self._transact_types:
-            file.write(tp.get_code())
+            tp.write(file)
             file.write('\n')
 
 class SubModel(Model):

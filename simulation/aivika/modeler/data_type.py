@@ -41,26 +41,42 @@ class TransactType:
         expect_either_attr(attr)
         self._attrs[attr.get_name()] = attr
 
-    def get_code(self):
-        """Return the type definition code."""
-        code = 'data ' + self.get_name() + ' = '
+    def write(self, file):
+        """Write the type definition code in the specified file."""
+        file.write('type ')
+        file.write(self.get_name())
+        file.write(' = Arrival ')
+        file.write(self._get_impl_name())
+        file.write('\n\n')
+        self._write_impl(file)
+
+    def _get_impl_name(self):
+        """Return the implementation type name."""
+        return self.get_name() + '_Impl'
+
+    def _write_impl(self, file):
+        """Write the implementation type definition code."""
+        name = self._get_impl_name()
+        file.write('data ' + name + ' = ')
         if len(self._attrs) == 0:
-            code += self.get_name()
+            file.write(name)
         else:
-            code += '\n  ' + self.get_name() + ' {'
+            file.write('\n  ')
+            file.write(name)
+            file.write(' {')
             first = True
             for name in self._attrs:
                 attr = self._attrs[name]
                 if first:
                     first = False
-                    code += '\n      '
+                    file.write('\n      ')
                 else:
-                    code += '\n    , '
-                code += attr.get_code()
-                code += ' :: ' + encode_data_type(attr.get_data_type())
-            code += '\n    }'
-        code += '\n'
-        return code
+                    file.write('\n    , ')
+                file.write(attr.get_code())
+                file.write(' :: ')
+                file.write(encode_data_type(attr.get_data_type()))
+            file.write('\n    }')
+        file.write('\n')
 
 class Attr:
     """The transact attribute."""
@@ -88,7 +104,7 @@ class Attr:
 
     def get_expr(self):
         """Return an expression that evaluates to the attribute value."""
-        code = '(\\a -> return $ ' + self.get_code() + ' a)'
+        code = '(\\a -> return $ ' + self.get_code() + ' $ arrivalValue a)'
         return Expr(self._model, code)
 
     def get_data_type(self):
@@ -121,12 +137,12 @@ class OptionalAttr(Attr):
 
     def get_expr(self, default_value):
         """Return an expression that evaluates to the attribute value."""
-        code = '(\\a -> return $ maybe ' + str(default_value) + ' id $ ' + self.get_code() + ' a)'
+        code = '(\\a -> return $ maybe ' + str(default_value) + ' id $ ' + self.get_code() + ' $ arrivalValue a)'
         return Expr(self._model, code)
 
     def has_expr(self):
         """Return an expression that evaluates to flag indicating whether the attribute is defined."""
-        code = '(\\a -> return $ isJust $ ' + self.get_code() + ' a)'
+        code = '(\\a -> return $ isJust $ ' + self.get_code() + ' $ arrivalValue a)'
         return Expr(self._model, code)
 
     def get_data_type(self):
