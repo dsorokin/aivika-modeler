@@ -142,3 +142,17 @@ def weibull_random_stream(transact_type, shape, scale):
     y.bind_to_input()
     y.write(code)
     return y
+
+def discrete_random_stream(transact_type, pdf):
+    """Return a new stream of transacts with random delays having the discrete distribution by the specified probability random function."""
+    expect_transact_type(transact_type)
+    model = transact_type.get_model()
+    count = len(pdf)
+    pdf = map(lambda x: '(' + str(x[0]) + ', ' + str(x[1]) + ')', pdf)
+    pdf = '[' + ', '.join(pdf) + ']'
+    code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
+    code += 'randomDiscreteStream ' + pdf
+    y = StreamPort(model, transact_type.get_data_type())
+    y.bind_to_input()
+    y.write(code)
+    return y

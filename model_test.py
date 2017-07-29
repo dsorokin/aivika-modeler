@@ -24,7 +24,8 @@ port1 = merge_streams([empty_stream(model, data_type),
     binomial_random_stream(data_type, 0.2, 3),
     gamma_random_stream(data_type, 2, 3),
     beta_random_stream(data_type, 2, 3),
-    weibull_random_stream(data_type, 2, 3)])
+    weibull_random_stream(data_type, 2, 3),
+    discrete_random_stream(data_type, [(0.1, 2), (0.4, 3), (0.5, 6)])])
 
 port2 = StreamPort(model, data_type, 'port2')
 port3 = StreamPort(model, data_type, 'port3')
