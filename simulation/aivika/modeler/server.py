@@ -23,3 +23,17 @@ def server_stream(server_port, stream_port):
     y.write(code)
     s2.bind_to_output()
     return y
+
+def hold_server(transact_type, expr, preemptible = False):
+    """Create a server that holds the process for the time interval specified by the expression when processing each transact from the input stream."""
+    tp = transact_type
+    e = expr
+    expect_transact_type(tp)
+    expect_expr(e)
+    expect_same_model([tp, e])
+    model = tp.get_model()
+    code = 'newPreemptibleServer ' + str(preemptible) + ' $ \\a -> '
+    code += 'do { dt <- liftEvent $ ' + e.read('a') + '; holdProcess dt; return a }'
+    y = ServerPort(model, UNIT_TYPE, tp, tp)
+    y.write(code)
+    return y

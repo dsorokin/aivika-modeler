@@ -163,7 +163,11 @@ port16 = port16b
 
 port17 = hold_stream(return_expr(model, 0.123), port16)
 
-terminate_stream(port17)
+sr = hold_server(data_type, return_expr(model, 0.456))
+
+port18 = server_stream(sr, port17)
+
+terminate_stream(port18)
 
 specs = Specs(0, 100, 0.1)
 
