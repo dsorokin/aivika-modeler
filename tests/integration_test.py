@@ -43,6 +43,7 @@ r2 = create_resource_with_max_count(model, 2, 10, 'r2')
 r3 = create_resource(model, 3, 'r3', queue_strategy = 'StaticPriorities')
 
 r3.add_result_source()
+reset_resource(r3, 10.0)
 
 priority = if_expr(binary_expr(return_expr(model, 10), '<',
     binary_expr(time_expr(model), '*', int2double_expr(resource_count(r1)))),

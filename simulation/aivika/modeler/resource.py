@@ -118,3 +118,12 @@ def resource_count(resource_port):
     model = r.get_model()
     code = '(\\a -> liftEvent $ R.resourceCount ' + r.read() + ')'
     return Expr(model, code)
+
+def reset_resource(resource_port, reset_time):
+    """Reset the resource statistics at the specified modeling time."""
+    r = resource_port
+    expect_resource(r)
+    model = r.get_model()
+    code = 'runEventInStartTime $ enqueueEvent ' + str(reset_time)
+    code += ' $ R.resetResource ' + r.read()
+    model.add_action(code)
