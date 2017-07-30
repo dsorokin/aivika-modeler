@@ -334,3 +334,22 @@ def expect_server(server_port):
     data_type = s.get_data_type()
     if (not isinstance(s, ServerPort)) or len(data_type) == 0 or data_type[0] != 'Server':
         raise InvalidPortException('Expected ' + s.get_name() + ' to be a server')
+
+class ArrivalTimerPort(SourcePort):
+    """The timer port that allows measuring the processing time of transacts."""
+
+    def __init__(self, model, name = None, descr = None, comp = None):
+        """Initializes a new port."""
+        base_comp = model.get_base_comp()
+        data_type = []
+        data_type.append('ArrivalTimer')
+        if not (base_comp is None):
+            data_type.append(base_comp)
+        SourcePort.__init__(self, model, data_type, name, descr, comp)
+
+def expect_arrival_timer(arrival_timer_port):
+    """Expect the port to be an arrival timer that measures the processing time."""
+    p = arrival_timer_port
+    data_type = p.get_data_type()
+    if (not isinstance(p, ArrivalTimerPort)) or len(data_type) == 0 or data_type[0] != 'ArrivalTimer':
+        raise InvalidPortException('Expected ' + p.get_name() + ' to be an arrival timer')

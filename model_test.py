@@ -167,7 +167,12 @@ sr = hold_server(data_type, return_expr(model, 0.456))
 
 port18 = server_stream(sr, port17)
 
-terminate_stream(port18)
+timer = create_arrival_timer(model, 'timer')
+timer.add_result_source()
+
+port19 = arrival_timer_stream(timer, port18)
+
+terminate_stream(port19)
 
 specs = Specs(0, 100, 0.1)
 
