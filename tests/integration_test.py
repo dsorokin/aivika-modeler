@@ -160,6 +160,8 @@ port15 = port15m
 
 pr1 = create_preemptible_resource(model, 71, 'pr1')
 
+reset_preemptible_resource(pr1, 10.0)
+
 port16a = release_preemptible_resource(pr1, request_preemptible_resource_with_priority(pr1, return_expr(model, 11), port15))
 port16b = transform_stream(field2.expr_transform(preemptible_resource_count(pr1)), port16a)
 port16 = port16b

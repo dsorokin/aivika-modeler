@@ -76,3 +76,12 @@ def preemptible_resource_count(preemptible_resource_port):
     model = r.get_model()
     code = '(\\a -> liftEvent $ PR.resourceCount ' + r.read() + ')'
     return Expr(model, code)
+
+def reset_preemptible_resource(preemptible_resource_port, reset_time):
+    """Reset the preemptible resource statistics at the specified modeling time."""
+    r = preemptible_resource_port
+    expect_preemptible_resource(r)
+    model = r.get_model()
+    code = 'runEventInStartTime $ enqueueEvent ' + str(reset_time)
+    code += ' $ PR.resetResource ' + r.read()
+    model.add_action(code)
