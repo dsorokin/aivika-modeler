@@ -148,9 +148,9 @@ def expect_same_model(ports):
     """Expect the ports to be belong to the same model."""
     if len(ports) > 0:
         p0 = ports[0]
-        model = p0.get_model()
+        model = p0.get_model().get_main_model()
         for p in ports:
-            if model != p.get_model():
+            if model != p.get_model().get_main_model():
                 raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + p.get_name() + ' to belong to the same model.')
 
 def expect_same_data_type(ports):
