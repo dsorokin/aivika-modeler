@@ -2,9 +2,9 @@ Aivika Modeler allows building and running discrete event simulation models in P
 =====================================================================================
 
 The model written in Python is translated into its Haskell representation 
-based on using the Aivika simulation libraries, namely 
-`aivika<http://hackage.haskell.org/package/aivika>`_ and
-`aivika-transformers<http://hackage.haskell.org/package/aivika-transformers>`_. 
+based on using the Aivika simulation libraries, namely `aivika 
+<http://hackage.haskell.org/package/aivika>`_ and `aivika-transformers 
+<http://hackage.haskell.org/package/aivika-transformers>`_. 
 Then the translated model is compiled by GHC into native code and executed. 
 The simulation itself should be quite fast and efficient.
 
@@ -13,7 +13,7 @@ for running may take a few minutes. On next time, it may take just
 a few seconds.
 
 There is one prerequisite, though. To use Aivika Modeler, you must have 
-`Stack<http://docs.haskellstack.org/>`_ installed on your computer.
+`Stack <http://docs.haskellstack.org/>`_ installed on your computer.
 The main operating systems are supported: Windows, Linux and macOS.
 
 In most cases you do not need to know the Haskell programming language. 
