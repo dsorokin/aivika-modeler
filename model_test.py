@@ -104,6 +104,9 @@ sf = exponential_random_server(data_type, 0.5)
 sg = erlang_random_server(data_type, 0.5, 3)
 sh = poisson_random_server(data_type, 0.5)
 si = binomial_random_server(data_type, 0.2, 3)
+sj = gamma_random_server(data_type, 0.2, 0.3)
+sk = beta_random_server(data_type, 0.2, 0.3)
+sl = weibull_random_server(data_type, 0.2, 0.3)
 
 port14a = server_stream(sa, port13)
 port14b = server_stream(sb, port14a)
@@ -114,7 +117,10 @@ port14f = server_stream(sf, port14e)
 port14g = server_stream(sg, port14f)
 port14h = server_stream(sh, port14g)
 port14i = server_stream(si, port14h)
-port14 = port14i
+port14j = server_stream(sj, port14i)
+port14k = server_stream(sk, port14j)
+port14l = server_stream(sl, port14k)
+port14 = port14l
 
 terminate_stream(port14)
 

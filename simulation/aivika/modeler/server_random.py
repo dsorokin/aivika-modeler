@@ -143,3 +143,48 @@ def binomial_random_server(transact_type, probability, trials, preemptible = Fal
     y = ServerPort(model, UNIT_TYPE, tp, tp)
     y.write(code)
     return y
+
+def gamma_random_server(transact_type, shape, scale, preemptible = False):
+    """Return a new server that hold the process with random delays having the Gamma distribution by the specified shape and scale."""
+    expect_transact_type(transact_type)
+    tp = transact_type.get_data_type()
+    model = transact_type.get_model()
+    code = 'newPreemptibleRandomGammaServer '
+    code += str(preemptible)
+    code += ' '
+    code += str(shape)
+    code += ' '
+    code += str(scale)
+    y = ServerPort(model, UNIT_TYPE, tp, tp)
+    y.write(code)
+    return y
+
+def beta_random_server(transact_type, alpha, beta, preemptible = False):
+    """Return a new server that hold the process with random delays having the Beta distribution by the specified shape parameters (alpha and beta)."""
+    expect_transact_type(transact_type)
+    tp = transact_type.get_data_type()
+    model = transact_type.get_model()
+    code = 'newPreemptibleRandomBetaServer '
+    code += str(preemptible)
+    code += ' '
+    code += str(alpha)
+    code += ' '
+    code += str(beta)
+    y = ServerPort(model, UNIT_TYPE, tp, tp)
+    y.write(code)
+    return y
+
+def weibull_random_server(transact_type, shape, scale, preemptible = False):
+    """Return a new server that hold the process with random delays having the Weibull distribution by the specified shape and scale."""
+    expect_transact_type(transact_type)
+    tp = transact_type.get_data_type()
+    model = transact_type.get_model()
+    code = 'newPreemptibleRandomWeibullServer '
+    code += str(preemptible)
+    code += ' '
+    code += str(shape)
+    code += ' '
+    code += str(scale)
+    y = ServerPort(model, UNIT_TYPE, tp, tp)
+    y.write(code)
+    return y
