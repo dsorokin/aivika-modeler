@@ -78,7 +78,7 @@ def lognormal_random_server(transact_type, normal_mean_delay, normal_delay_devia
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
-    code = 'newPreemptibleRandomNormalServer '
+    code = 'newPreemptibleRandomLogNormalServer '
     code += str(preemptible)
     code += ' '
     code += str(normal_mean_delay)
