@@ -95,12 +95,26 @@ port13d = transform_stream(field2.assign_transform(10), port13c)
 port13e = transform_stream(compose_transforms(identity_transform(model), field2.removal_transform()), port13d)
 port13 = port13e
 
-s1 = uniform_random_server(data_type, 3, 7)
-s2 = uniform_int_random_server(data_type, 3, 7)
+sa = uniform_random_server(data_type, 3, 7)
+sb = uniform_int_random_server(data_type, 3, 7)
+sc = triangular_random_server(data_type, 3, 4, 7, preemptible = True)
+sd = normal_random_server(data_type, 0.5, 0.3)
+se = lognormal_random_server(data_type, 0.5, 0.3)
+sf = exponential_random_server(data_type, 0.5)
+sg = erlang_random_server(data_type, 0.5, 3)
+sh = poisson_random_server(data_type, 0.5)
+si = binomial_random_server(data_type, 0.2, 3)
 
-port14a = server_stream(s1, port13)
-port14b = server_stream(s2, port14a)
-port14 = port14b
+port14a = server_stream(sa, port13)
+port14b = server_stream(sb, port14a)
+port14c = server_stream(sc, port14b)
+port14d = server_stream(sd, port14c)
+port14e = server_stream(se, port14d)
+port14f = server_stream(sf, port14e)
+port14g = server_stream(sg, port14f)
+port14h = server_stream(sh, port14g)
+port14i = server_stream(si, port14h)
+port14 = port14i
 
 terminate_stream(port14)
 
