@@ -150,7 +150,7 @@ def transform_stream(transform, stream_port):
     expect_stream(s)
     model = s.get_model().get_main_model()
     if model != t.get_model().get_main_model():
-        raise InvalidPortException('Expected either the stream ' + s.get_name() + ' or transform to belong to another model')
+        raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the transform to belong to the same model')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> liftEvent '
     code += t.read('a')
@@ -170,7 +170,7 @@ def within_stream(expr, stream_port):
     expect_stream(s)
     model = s.get_model().get_main_model()
     if model != e.get_model().get_main_model():
-        raise InvalidPortException('Expected either the stream ' + s.get_name() + ' or expression to belong to another model')
+        raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> liftEvent '
     code += e.read('a')
@@ -190,7 +190,7 @@ def hold_stream(expr, stream_port):
     expect_stream(stream_port)
     model = s.get_model().get_main_model()
     if model != e.get_model().get_main_model():
-        raise InvalidPortException('Expected either the stream ' + s.get_name() + ' or expression to belong to another model')
+        raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> do { dt <- liftEvent $ '
     code += e.read('a')

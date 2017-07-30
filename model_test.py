@@ -173,7 +173,13 @@ timer.add_result_source()
 port19 = arrival_timer_stream(timer, port18)
 port20 = within_stream(return_expr(model, '()'), port19)
 
-terminate_stream(port20)
+ref = create_ref(model, 7.8, DOUBLE_TYPE, 'ref')
+
+port21a = transform_stream(field1.expr_transform(read_ref(ref)), port20)
+port21b = within_stream(write_ref(ref, return_expr(model, 9.1)), port21a)
+port21 = port21b
+
+terminate_stream(port21)
 
 specs = Specs(0, 100, 0.1)
 

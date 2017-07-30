@@ -18,3 +18,4 @@ from simulation.aivika.modeler.resource_preemption import *
 from simulation.aivika.modeler.server import *
 from simulation.aivika.modeler.server_random import *
 from simulation.aivika.modeler.arrival_timer import *
+from simulation.aivika.modeler.ref import *

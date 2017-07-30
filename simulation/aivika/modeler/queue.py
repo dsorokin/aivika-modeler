@@ -25,7 +25,6 @@ def create_unbounded_queue(model, item_data_type, name, descr = None, storing_qu
     comp_type.append(y.get_data_type())
     code = 'IQ.newQueue ' + storing_queue_strategy + ' ' + output_queue_strategy
     code = '(runEventInStartTime $ ' + code + ') :: ' + encode_data_type (comp_type)
-    y._item_data_type = item_data_type
     y.write(code)
     return y
 
@@ -47,7 +46,6 @@ def create_queue(model, item_data_type, capacity, name, descr = None, input_queu
     comp_type.append(y.get_data_type())
     code = 'Q.newQueue ' + input_queue_strategy + ' ' + storing_queue_strategy + ' ' + output_queue_strategy + ' ' + str(capacity)
     code = '(runEventInStartTime $ ' + code + ') :: ' + encode_data_type (comp_type)
-    y._item_data_type = item_data_type
     y.write(code)
     return y
 
