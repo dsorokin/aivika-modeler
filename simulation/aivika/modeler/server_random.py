@@ -21,3 +21,18 @@ def uniform_random_server(transact_type, min_delay, max_delay, preemptible = Fal
     y = ServerPort(model, UNIT_TYPE, tp, tp)
     y.write(code)
     return y
+
+def uniform_int_random_server(transact_type, min_delay, max_delay, preemptible = False):
+    """Return a new server that hold the process with integer random delays distributed uniformly."""
+    expect_transact_type(transact_type)
+    tp = transact_type.get_data_type()
+    model = transact_type.get_model()
+    code = 'newPreemptibleRandomUniformIntServer '
+    code += str(preemptible)
+    code += ' '
+    code += str(min_delay)
+    code += ' '
+    code += str(max_delay)
+    y = ServerPort(model, UNIT_TYPE, tp, tp)
+    y.write(code)
+    return y

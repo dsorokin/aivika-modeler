@@ -14,7 +14,7 @@ field2 = OptionalAttr(data_type, 'field2', INT_TYPE)
 
 port1 = merge_streams([empty_stream(model, data_type),
     uniform_random_stream(data_type, 3, 7),
-    uniform_random_int_stream(data_type, 3, 7),
+    uniform_int_random_stream(data_type, 3, 7),
     triangular_random_stream(data_type, 3, 4, 7),
     normal_random_stream(data_type, 5, 3),
     lognormal_random_stream(data_type, 5, 3),
@@ -96,8 +96,11 @@ port13e = transform_stream(compose_transforms(identity_transform(model), field2.
 port13 = port13e
 
 s1 = uniform_random_server(data_type, 3, 7)
+s2 = uniform_int_random_server(data_type, 3, 7)
 
-port14 = server_stream(s1, port13)
+port14a = server_stream(s1, port13)
+port14b = server_stream(s2, port14a)
+port14 = port14b
 
 terminate_stream(port14)
 

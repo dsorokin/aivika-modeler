@@ -18,7 +18,7 @@ def uniform_random_stream(transact_type, min_delay, max_delay):
     y.write(code)
     return y
 
-def uniform_random_int_stream(transact_type, min_delay, max_delay):
+def uniform_int_random_stream(transact_type, min_delay, max_delay):
     """Return a new stream of transacts with integer random delays distributed uniformly."""
     expect_transact_type(transact_type)
     model = transact_type.get_model()
