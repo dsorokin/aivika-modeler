@@ -159,6 +159,8 @@ class MainModel(Model):
 
     def generate(self, standalone = False, specs = None, dirname = 'dist'):
         """Generate the project files."""
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
         if standalone:
             self._generate_model(standalone, specs, dirname + '/app/Main.hs')
         else:
@@ -172,7 +174,6 @@ class MainModel(Model):
 
     def _generate_model(self, standalone = False, specs = None, filename = 'dist/app/Model.hs'):
         """Generate the model file."""
-        os.makedirs(os.path.dirname(filename), exist_ok = True)
         with open(filename, "w") as file:
             self.write_model(file, standalone = standalone, specs = specs)
 

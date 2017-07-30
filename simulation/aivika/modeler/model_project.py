@@ -160,37 +160,31 @@ extra-package-dbs: []
 
 def generate_cabal_file_impl(model, filename):
     """Generate a cabal file."""
-    os.makedirs(os.path.dirname(filename), exist_ok = True)
     with open(filename, "w") as file:
         write_cabal_file_impl(model, file)
 
 def generate_license_file_impl(filename):
     """Generate the LICENSE file."""
-    os.makedirs(os.path.dirname(filename), exist_ok = True)
     with open(filename, "w") as file:
         write_license_file_impl(file)
 
 def generate_readme_file_impl(filename):
     """Generate the README.md file."""
-    os.makedirs(os.path.dirname(filename), exist_ok = True)
     with open(filename, "w") as file:
         write_readme_file_impl(file)
 
 def generate_setup_file_impl(filename):
     """Generate the Setup.hs file."""
-    os.makedirs(os.path.dirname(filename), exist_ok = True)
     with open(filename, "w") as file:
         write_setup_file_impl(file)
 
 def generate_lib_file_impl(filename):
     """Generate the library file."""
-    os.makedirs(os.path.dirname(filename), exist_ok = True)
     with open(filename, "w") as file:
         write_lib_file_impl(file)
 
 def generate_stack_file_impl(model, filename):
     """Generate a stack file."""
-    os.makedirs(os.path.dirname(filename), exist_ok = True)
     with open(filename, "w") as file:
         write_stack_file_impl(model, file)
 
