@@ -38,7 +38,7 @@ def uniform_int_random_server(transact_type, min_delay, max_delay, preemptible =
     y.write(code)
     return y
 
-def triangular_random_server(transact_type, min_delay, mean_delay, max_delay, preemptible = False):
+def triangular_random_server(transact_type, min_delay, median_delay, max_delay, preemptible = False):
     """Return a new server that holds the process with random delays having the triangular distribution."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
@@ -48,7 +48,7 @@ def triangular_random_server(transact_type, min_delay, mean_delay, max_delay, pr
     code += ' '
     code += str(min_delay)
     code += ' '
-    code += str(mean_delay)
+    code += str(median_delay)
     code += ' '
     code += str(max_delay)
     y = ServerPort(model, UNIT_TYPE, tp, tp)
