@@ -90,7 +90,7 @@ def lognormal_random_server(transact_type, normal_mean_delay, normal_delay_devia
     return y
 
 def exponential_random_server(transact_type, mean_delay, preemptible = False):
-    """Return a new server that holds the process with random delays having the exponential distribution."""
+    """Return a new server that holds the process with random delays having the exponential distribution with the specified mean (a reciprocal of the rate)."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
