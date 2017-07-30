@@ -135,3 +135,21 @@ def queue_size(queue_port):
     model = q.get_model()
     code = '(\\a -> liftEvent $ Q.queueCount ' + q.read() + ')'
     return Expr(model, code)
+
+def reset_unbounded_queue(unbounded_queue_port, reset_time):
+    """Reset the unbounded queue statistics at the specified modeling time."""
+    q = unbounded_queue_port
+    expect_unbounded_queue(q)
+    model = q.get_model()
+    code = 'runEventInStartTime $ enqueueEvent ' + str(reset_time)
+    code += ' $ IQ.resetQueue ' + q.read()
+    model.add_action(code)
+
+def reset_queue(queue_port, reset_time):
+    """Reset the bounded queue statistics at the specified modeling time."""
+    q = queue_port
+    expect_queue(q)
+    model = q.get_model()
+    code = 'runEventInStartTime $ enqueueEvent ' + str(reset_time)
+    code += ' $ Q.resetQueue ' + q.read()
+    model.add_action(code)

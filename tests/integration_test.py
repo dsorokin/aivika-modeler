@@ -58,6 +58,9 @@ port6 = port6b
 q1 = create_queue(model, data_type, 7, 'q1')
 q2 = create_unbounded_queue(model, data_type, 'q2')
 
+reset_queue(q1, 10.0)
+reset_unbounded_queue(q2, 10.0)
+
 (port8a, port8b) = clone_stream(2, port3)
 
 enqueue_stream(q1, port8a)
