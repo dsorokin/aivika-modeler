@@ -173,6 +173,8 @@ port18 = server_stream(sr, port17)
 timer = create_arrival_timer(model, 'timer')
 timer.add_result_source()
 
+reset_arrival_timer(timer, 10.0)
+
 port19 = arrival_timer_stream(timer, port18)
 port20 = within_stream(return_expr(model, '()'), port19)
 

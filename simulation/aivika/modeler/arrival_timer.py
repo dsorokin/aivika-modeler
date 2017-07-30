@@ -27,3 +27,12 @@ def arrival_timer_stream(arrival_timer_port, stream_port):
     y.bind_to_input()
     s.bind_to_output()
     return y
+
+def reset_arrival_timer(arrival_timer_port, reset_time):
+    """Reset the arrival timer statistics at the specified modeling time."""
+    t = arrival_timer_port
+    expect_arrival_timer(t)
+    model = t.get_model()
+    code = 'runEventInStartTime $ enqueueEvent ' + str(reset_time)
+    code += ' $ resetArrivalTimer ' + t.read()
+    model.add_action(code)
