@@ -212,6 +212,29 @@ def expect_resource(resource_port):
     if len(data_type) == 0 or data_type[0] != 'Resource':
         raise InvalidPortException('Expected ' + r.get_name() + ' to be a resource')
 
+class PreemptibleResourcePort(SourcePort):
+    """The port for the resource that can be preempted."""
+
+    def __init__(self, model, name = None, descr = None, comp = None):
+        """Initializes a new port."""
+        base_comp = model.get_base_comp()
+        if base_comp is None:
+            model.add_module_import('import qualified Simulation.Aivika.Resource.Preemption as PR')
+        else:
+            model.add_module_import('import qualified Simulation.Aivika.Trans.Resource.Preemption as PR')
+        data_type = []
+        data_type.append('PR.Resource')
+        if not (base_comp is None):
+            data_type.append(base_comp)
+        SourcePort.__init__(self, model, data_type, name, descr, comp)
+
+def expect_preemptible_resource(preemptible_resource_port):
+    """Expect the port to be a preemptible resource."""
+    r = preemptible_resource_port
+    data_type = r.get_data_type()
+    if len(data_type) == 0 or data_type[0] != 'PR.Resource':
+        raise InvalidPortException('Expected ' + r.get_name() + ' to be a preemptible resource')
+
 class UnboundedQueuePort(SourcePort):
     """The unbounded queue port."""
 

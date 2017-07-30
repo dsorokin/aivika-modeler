@@ -4,6 +4,7 @@
 
 from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
+from simulation.aivika.modeler.expr import *
 from simulation.aivika.modeler.queue_strategy import *
 
 def create_resource(model, count, name, descr = None, queue_strategy = 'FCFS'):
@@ -52,11 +53,6 @@ def request_resource(resource_port, stream_port):
     if r.priority_queue_strategy:
         raise InvalidPortException('Expected port ' + r.get_name() + ' to have a non-priority queue strategy: ' + r.queue_strategy)
     model = r.get_model()
-    base_comp = model.get_base_comp()
-    if base_comp is None:
-        model.add_module_import('import qualified Simulation.Aivika.Resource as R')
-    else:
-        model.add_module_import('import qualified Simulation.Aivika.Trans.Resource as R')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> do { R.requestResource '
     code += r.read()
@@ -83,11 +79,6 @@ def request_resource_with_priority(resource_port, priority_expr, stream_port):
     if not r.priority_queue_strategy:
         raise InvalidPortException('Expected port ' + r.get_name() + ' to have a priority queue strategy: ' + r.queue_strategy)
     model = r.get_model()
-    base_comp = model.get_base_comp()
-    if base_comp is None:
-        model.add_module_import('import qualified Simulation.Aivika.Resource as R')
-    else:
-        model.add_module_import('import qualified Simulation.Aivika.Trans.Resource as R')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> do { p <- liftEvent $ '
     code += priority_expr.read('a')
@@ -109,11 +100,6 @@ def release_resource(resource_port, stream_port):
     expect_stream(s)
     expect_same_model([r, s])
     model = r.get_model()
-    base_comp = model.get_base_comp()
-    if base_comp is None:
-        model.add_module_import('import qualified Simulation.Aivika.Resource as R')
-    else:
-        model.add_module_import('import qualified Simulation.Aivika.Trans.Resource as R')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> do { R.releaseResource '
     code += r.read()

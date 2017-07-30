@@ -49,7 +49,9 @@ priority = if_expr(binary_expr(return_expr(model, 10), '<',
         return_expr(model, 2),
         return_expr(model, 4))
 
-port6 = release_resource(r3, request_resource_with_priority(r3, priority, release_resource(r1, request_resource(r1, port5b))))
+port6a = release_resource(r3, request_resource_with_priority(r3, priority, release_resource(r1, request_resource(r1, port5b))))
+port6b = transform_stream(field2.expr_transform(resource_count(r1)), port6a)
+port6 = port6b
 
 (port7a, port7b) = test_stream(return_expr(model, 'False'), port6)
 
@@ -153,7 +155,13 @@ port15l = transform_stream(field1.expr_transform(el), port15k)
 port15m = transform_stream(field1.expr_transform(em), port15l)
 port15 = port15m
 
-terminate_stream(port15)
+pr1 = create_preemptible_resource(model, 71, 'pr1')
+
+port16a = release_preemptible_resource(pr1, request_preemptible_resource_with_priority(pr1, return_expr(model, 11), port15))
+port16b = transform_stream(field2.expr_transform(preemptible_resource_count(pr1)), port16a)
+port16 = port16b
+
+terminate_stream(port16)
 
 specs = Specs(0, 100, 0.1)
 
