@@ -5,6 +5,7 @@
 from simulation.aivika.modeler.specs import *
 from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.expr import *
+from simulation.aivika.modeler.expr_random import *
 from simulation.aivika.modeler.transform import *
 from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.data_type import *

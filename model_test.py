@@ -124,7 +124,14 @@ port14l = server_stream(sl, port14k)
 port14m = server_stream(sm, port14l)
 port14 = port14m
 
-terminate_stream(port14)
+ea = uniform_random_expr(model, 3.0, 7.0)
+eb = uniform_int_random_expr(model, 3, 7)
+
+port15a = transform_stream(field1.expr_transform(ea), port14)
+port15b = transform_stream(field2.expr_transform(eb), port15a)
+port15 = port15b
+
+terminate_stream(port15)
 
 specs = Specs(0, 100, 0.1)
 
