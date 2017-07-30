@@ -137,7 +137,7 @@ class MainModel(Model):
             if not port.is_bound_to_output():
                 raise InvalidVariableException('Variable ' + port.get_name() + ' must be bound to its output')
 
-    def run(self, standalone = False, specs = None, dirname = 'dist'):
+    def run(self, standalone = False, specs = None, dirname = 'target'):
         """Generate and compile the project."""
         self.generate(standalone = standalone, specs = specs, dirname = dirname)
         cwd = os.getcwd()
@@ -148,7 +148,7 @@ class MainModel(Model):
         os.chdir(cwd)
         return status
 
-    def compile(self, standalone = False, specs = None, dirname = 'dist'):
+    def compile(self, standalone = False, specs = None, dirname = 'target'):
         """Generate and compile the project."""
         self.generate(standalone = standalone, specs = specs, dirname = dirname)
         cwd = os.getcwd()
@@ -157,7 +157,7 @@ class MainModel(Model):
         os.chdir(cwd)
         return status
 
-    def generate(self, standalone = False, specs = None, dirname = 'dist'):
+    def generate(self, standalone = False, specs = None, dirname = 'target'):
         """Generate the project files."""
         if not os.path.exists(dirname):
             os.makedirs(dirname)
