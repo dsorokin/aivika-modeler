@@ -13,3 +13,5 @@ from simulation.aivika.modeler.stream_random import *
 from simulation.aivika.modeler.queue_strategy import *
 from simulation.aivika.modeler.queue import *
 from simulation.aivika.modeler.resource import *
+from simulation.aivika.modeler.server import *
+from simulation.aivika.modeler.server_random import *

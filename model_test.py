@@ -95,7 +95,11 @@ port13d = transform_stream(field2.assign_transform(10), port13c)
 port13e = transform_stream(compose_transforms(identity_transform(model), field2.removal_transform()), port13d)
 port13 = port13e
 
-terminate_stream(port13)
+s1 = uniform_random_server(data_type, 3, 7)
+
+port14 = server_stream(s1, port13)
+
+terminate_stream(port14)
 
 specs = Specs(0, 100, 0.1)
 

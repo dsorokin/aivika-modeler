@@ -262,8 +262,8 @@ def encode_data_type(data_type):
         return data_type
     elif isinstance(data_type, list):
         return ' '.join(map(_encode_data_type_item, data_type))
-    elif isinstance(data_type_item, TransactType):
-        return data_type_item.get_name()
+    elif isinstance(data_type, TransactType):
+        return data_type.get_name()
     else:
         raise InvalidDataTypeException('Expected a legal data type: ' + str(data_type_item))
 
