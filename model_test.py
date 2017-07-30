@@ -161,7 +161,9 @@ port16a = release_preemptible_resource(pr1, request_preemptible_resource_with_pr
 port16b = transform_stream(field2.expr_transform(preemptible_resource_count(pr1)), port16a)
 port16 = port16b
 
-terminate_stream(port16)
+port17 = hold_stream(return_expr(model, 0.123), port16)
+
+terminate_stream(port17)
 
 specs = Specs(0, 100, 0.1)
 
