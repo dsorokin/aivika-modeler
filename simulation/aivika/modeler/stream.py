@@ -162,6 +162,26 @@ def transform_stream(transform, stream_port):
     s.bind_to_output()
     return y
 
+def within_stream(expr, stream_port):
+    """Call the specified expression for side effect when processing the input stream within the resulting stream."""
+    e = expr
+    s = stream_port
+    expect_expr(e)
+    expect_stream(s)
+    model = s.get_model().get_main_model()
+    if model != e.get_model().get_main_model():
+        raise InvalidPortException('Expected either the stream ' + s.get_name() + ' or expression to belong to another model')
+    item_data_type = s.get_item_data_type()
+    code = 'return $ mapStreamM (\\a -> liftEvent '
+    code += e.read('a')
+    code += ' >> return a) '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
 def hold_stream(expr, stream_port):
     """Hold the process for the time interval specified by the expression when processing each transact from the stream."""
     e = expr
