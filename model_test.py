@@ -107,6 +107,7 @@ si = binomial_random_server(data_type, 0.2, 3)
 sj = gamma_random_server(data_type, 0.2, 0.3)
 sk = beta_random_server(data_type, 0.2, 0.3)
 sl = weibull_random_server(data_type, 0.2, 0.3)
+sm = discrete_random_server(data_type, [(0.1, 2), (0.4, 3), (0.5, 6)])
 
 port14a = server_stream(sa, port13)
 port14b = server_stream(sb, port14a)
@@ -120,7 +121,8 @@ port14i = server_stream(si, port14h)
 port14j = server_stream(sj, port14i)
 port14k = server_stream(sk, port14j)
 port14l = server_stream(sl, port14k)
-port14 = port14l
+port14m = server_stream(sm, port14l)
+port14 = port14m
 
 terminate_stream(port14)
 

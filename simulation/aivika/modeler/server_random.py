@@ -6,9 +6,10 @@ from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.stream import *
 from simulation.aivika.modeler.data_type import *
+from simulation.aivika.modeler.pdf import *
 
 def uniform_random_server(transact_type, min_delay, max_delay, preemptible = False):
-    """Return a new server that hold the process with random delays distributed uniformly."""
+    """Return a new server that holds the process with random delays distributed uniformly."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -23,7 +24,7 @@ def uniform_random_server(transact_type, min_delay, max_delay, preemptible = Fal
     return y
 
 def uniform_int_random_server(transact_type, min_delay, max_delay, preemptible = False):
-    """Return a new server that hold the process with integer random delays distributed uniformly."""
+    """Return a new server that holds the process with integer random delays distributed uniformly."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -38,7 +39,7 @@ def uniform_int_random_server(transact_type, min_delay, max_delay, preemptible =
     return y
 
 def triangular_random_server(transact_type, min_delay, mean_delay, max_delay, preemptible = False):
-    """Return a new server that hold the process with random delays having the triangular distribution."""
+    """Return a new server that holds the process with random delays having the triangular distribution."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -55,7 +56,7 @@ def triangular_random_server(transact_type, min_delay, mean_delay, max_delay, pr
     return y
 
 def normal_random_server(transact_type, mean_delay, delay_deviation, preemptible = False):
-    """Return a new server that hold the process with random delays having the normal distribution."""
+    """Return a new server that holds the process with random delays having the normal distribution."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -70,7 +71,7 @@ def normal_random_server(transact_type, mean_delay, delay_deviation, preemptible
     return y
 
 def lognormal_random_server(transact_type, normal_mean_delay, normal_delay_deviation, preemptible = False):
-    """Return a new server that hold the process with random delays having the lognormal distribution.
+    """Return a new server that holds the process with random delays having the lognormal distribution.
 
        The numerical parameters are related to the normal distribution that
        this distribution is derived from.
@@ -89,7 +90,7 @@ def lognormal_random_server(transact_type, normal_mean_delay, normal_delay_devia
     return y
 
 def exponential_random_server(transact_type, mean_delay, preemptible = False):
-    """Return a new server that hold the process with random delays having the exponential distribution."""
+    """Return a new server that holds the process with random delays having the exponential distribution."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -102,7 +103,7 @@ def exponential_random_server(transact_type, mean_delay, preemptible = False):
     return y
 
 def erlang_random_server(transact_type, scale, shape, preemptible = False):
-    """Return a new server that hold the process with random delays having the Erlang distribution with the specified scale (a reciprocal of the rate) and shape parameters."""
+    """Return a new server that holds the process with random delays having the Erlang distribution with the specified scale (a reciprocal of the rate) and shape parameters."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -117,7 +118,7 @@ def erlang_random_server(transact_type, scale, shape, preemptible = False):
     return y
 
 def poisson_random_server(transact_type, mean_delay, preemptible = False):
-    """Return a new server that hold the process with random delays having the Poisson distribution with the specified mean."""
+    """Return a new server that holds the process with random delays having the Poisson distribution with the specified mean."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -130,7 +131,7 @@ def poisson_random_server(transact_type, mean_delay, preemptible = False):
     return y
 
 def binomial_random_server(transact_type, probability, trials, preemptible = False):
-    """Return a new server that hold the process with random delays having the binomial distribution with the specified probability and trials."""
+    """Return a new server that holds the process with random delays having the binomial distribution with the specified probability and trials."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -145,7 +146,7 @@ def binomial_random_server(transact_type, probability, trials, preemptible = Fal
     return y
 
 def gamma_random_server(transact_type, shape, scale, preemptible = False):
-    """Return a new server that hold the process with random delays having the Gamma distribution by the specified shape and scale."""
+    """Return a new server that holds the process with random delays having the Gamma distribution by the specified shape and scale."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -160,7 +161,7 @@ def gamma_random_server(transact_type, shape, scale, preemptible = False):
     return y
 
 def beta_random_server(transact_type, alpha, beta, preemptible = False):
-    """Return a new server that hold the process with random delays having the Beta distribution by the specified shape parameters (alpha and beta)."""
+    """Return a new server that holds the process with random delays having the Beta distribution by the specified shape parameters (alpha and beta)."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -175,7 +176,7 @@ def beta_random_server(transact_type, alpha, beta, preemptible = False):
     return y
 
 def weibull_random_server(transact_type, shape, scale, preemptible = False):
-    """Return a new server that hold the process with random delays having the Weibull distribution by the specified shape and scale."""
+    """Return a new server that holds the process with random delays having the Weibull distribution by the specified shape and scale."""
     expect_transact_type(transact_type)
     tp = transact_type.get_data_type()
     model = transact_type.get_model()
@@ -185,6 +186,19 @@ def weibull_random_server(transact_type, shape, scale, preemptible = False):
     code += str(shape)
     code += ' '
     code += str(scale)
+    y = ServerPort(model, UNIT_TYPE, tp, tp)
+    y.write(code)
+    return y
+
+def discrete_random_server(transact_type, pdf, preemptible = False):
+    """Return a new server that holds the process with random delays having the discrete distribution by the specified probability density function."""
+    expect_transact_type(transact_type)
+    tp = transact_type.get_data_type()
+    model = transact_type.get_model()
+    code = 'newPreemptibleRandomDiscreteServer '
+    code += str(preemptible)
+    code += ' '
+    code += encode_pdf(pdf)
     y = ServerPort(model, UNIT_TYPE, tp, tp)
     y.write(code)
     return y

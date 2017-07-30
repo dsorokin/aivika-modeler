@@ -6,6 +6,7 @@ from simulation.aivika.modeler.model import *
 from simulation.aivika.modeler.port import *
 from simulation.aivika.modeler.stream import *
 from simulation.aivika.modeler.data_type import *
+from simulation.aivika.modeler.pdf import *
 
 def uniform_random_stream(transact_type, min_delay, max_delay):
     """Return a new stream of transacts with random delays distributed uniformly."""
@@ -144,14 +145,11 @@ def weibull_random_stream(transact_type, shape, scale):
     return y
 
 def discrete_random_stream(transact_type, pdf):
-    """Return a new stream of transacts with random delays having the discrete distribution by the specified probability random function."""
+    """Return a new stream of transacts with random delays having the discrete distribution by the specified probability density function."""
     expect_transact_type(transact_type)
     model = transact_type.get_model()
-    count = len(pdf)
-    pdf = map(lambda x: '(' + str(x[0]) + ', ' + str(x[1]) + ')', pdf)
-    pdf = '[' + ', '.join(pdf) + ']'
     code = 'return $ mapStream (\\a -> ' + transact_type.coerce_arrival('a') + ') $ '
-    code += 'randomDiscreteStream ' + pdf
+    code += 'randomDiscreteStream ' + encode_pdf(pdf)
     y = StreamPort(model, transact_type.get_data_type())
     y.bind_to_input()
     y.write(code)
