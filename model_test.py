@@ -126,10 +126,14 @@ port14 = port14m
 
 ea = uniform_random_expr(model, 3.0, 7.0)
 eb = uniform_int_random_expr(model, 3, 7)
+ec = triangular_random_expr(model, 3, 4, 7)
+ed = normal_random_expr(model, 0.5, 0.1)
 
 port15a = transform_stream(field1.expr_transform(ea), port14)
 port15b = transform_stream(field2.expr_transform(eb), port15a)
-port15 = port15b
+port15c = transform_stream(field1.expr_transform(ec), port15b)
+port15d = transform_stream(field1.expr_transform(ed), port15c)
+port15 = port15d
 
 terminate_stream(port15)
 
