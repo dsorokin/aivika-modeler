@@ -161,6 +161,10 @@ class MainModel(Model):
         """Generate the project files."""
         if not os.path.exists(dirname):
             os.makedirs(dirname)
+        if not os.path.exists(dirname + '/app'):
+            os.makedirs(dirname + '/app')
+        if not os.path.exists(dirname + '/src'):
+            os.makedirs(dirname + '/src')
         if standalone:
             self._generate_model(standalone, specs, dirname + '/app/Main.hs')
         else:
