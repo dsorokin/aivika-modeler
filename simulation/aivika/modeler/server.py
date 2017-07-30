@@ -24,7 +24,7 @@ def server_stream(server_port, stream_port):
     s2.bind_to_output()
     return y
 
-def hold_server(transact_type, expr, preemptible = False):
+def hold_server(transact_type, expr, preemptible = False, name = None, descr = None):
     """Create a server that holds the process for the time interval specified by the expression when processing each transact from the input stream."""
     tp = transact_type
     e = expr
@@ -34,6 +34,15 @@ def hold_server(transact_type, expr, preemptible = False):
     model = tp.get_model()
     code = 'newPreemptibleServer ' + str(preemptible) + ' $ \\a -> '
     code += 'do { dt <- liftEvent $ ' + e.read('a') + '; holdProcess dt; return a }'
-    y = ServerPort(model, UNIT_TYPE, tp, tp)
+    y = ServerPort(model, UNIT_TYPE, tp, tp, name = name, descr = descr)
     y.write(code)
     return y
+
+def reset_server(server_port, reset_time):
+    """Reset the server statistics at the specified modeling time."""
+    s = server_port
+    expect_server(s)
+    model = s.get_model()
+    code = 'runEventInStartTime $ enqueueEvent ' + str(reset_time)
+    code += ' $ resetServer ' + s.read()
+    model.add_action(code)

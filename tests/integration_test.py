@@ -169,7 +169,9 @@ port16 = port16b
 
 port17 = hold_stream(return_expr(model, 0.123), port16)
 
-sr = hold_server(data_type, return_expr(model, 0.456))
+sr = hold_server(data_type, return_expr(model, 0.456), name = 'sr')
+
+reset_server(sr, 10.0)
 
 port18 = server_stream(sr, port17)
 
