@@ -75,10 +75,10 @@ def unary_expr(op, expr):
         op = 'negate'
     elif op == '+':
         op = 'id'
-    elif op in ['abs', 'not']:
+    elif op in ['abs', 'not', 'round']:
         pass
     else:
-        raise InvalidExprException('Unrecognized unary operator: ' + op + ' (must be one of: +, -, abs, not)')
+        raise InvalidExprException('Unrecognized unary operator: ' + op + ' (must be one of: +, -, abs, not, round)')
     model = e.get_model()
     model.add_module_import('import Data.Functor')
     code = '(\\a -> fmap (' + op + ') ' + e.read('a') + ')'
