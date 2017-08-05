@@ -78,7 +78,7 @@ class ExperimentRendererUsingDiagrams(ChartingExperimentRenderer):
         else:
             raise ExperimentException('No support for the generalized version')
 
-    def write(self, file):
+    def write(self, file, experiment):
         """Write the code that runs the simulation experiment."""
         self._write_generators(file)
         file.write('\n')
@@ -88,4 +88,5 @@ class ExperimentRendererUsingDiagrams(ChartingExperimentRenderer):
         file.write('     putStrLn "Loaded."\n')
         file.write('     putStrLn "Started running the simulation and saving the results..."\n')
         file.write('     let renderer = DiagramsRenderer SVG (return fonts)\n')
-        file.write('     runExperiment experiment generators (WebPageRenderer renderer experimentFilePath) model\n')
+        file.write('         path     = WritableFilePath ' + encode_str(experiment.get_path()) + '\n')
+        file.write('     runExperiment experiment generators (WebPageRenderer renderer path) model\n')

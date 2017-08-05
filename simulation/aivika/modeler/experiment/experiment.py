@@ -2,6 +2,8 @@
 #
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
+import os
+
 from simulation.aivika.modeler.util import *
 
 class ExperimentException(Exception):
@@ -21,9 +23,14 @@ class Experiment:
                  descr = None):
         """Initializes a new instance."""
         self._renderer = renderer
+        self._path = get_experiment_path()
         self.run_count = run_count
         self.title = title
         self.descr = descr
+
+    def get_path(self):
+        """Return the experiment path."""
+        return self._path
 
     def install(self, model):
         """Install the prerequisites."""
@@ -43,7 +50,7 @@ class Experiment:
         self._write_def(file, indent)
         file.write('\n')
         file.write('\n')
-        self._renderer.write(file)
+        self._renderer.write(file, self)
 
     def _write_def(self, file, indent = ''):
         """Write the experiment definition code in the file."""
@@ -58,3 +65,21 @@ class Experiment:
             fields['experimentDescription'] = func
         file.write('defaultExperiment')
         write_record_fields(fields, file, indent + '  ')
+
+    def open(self):
+        """Open the experiment results in the browser."""
+        pass
+
+def get_experiment_path():
+    """Get the experiment directory path."""
+    cwd = os.getcwd()
+    basedir = cwd + os.sep + 'experiment'
+    counter = 1
+    while True:
+        if counter == 1:
+            dirname = basedir
+        else:
+            dirname = basedir + '(' + str(counter) + ')'
+        counter += 1
+        if not os.path.exists(dirname):
+            return dirname
