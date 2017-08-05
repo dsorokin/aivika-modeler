@@ -43,10 +43,10 @@ specs = Specs(0, 100, 0.1)
 unbounded_queue = create_unbounded_queue(model, data_type, name = 'unboundedQueue')
 unbounded_queue_source = unbounded_queue.add_result_source()
 
-views = [ExperimentSpecsView(title = 'Puper title',
+views = [ExperimentSpecsView(title = 'Testing Experiment Title',
             descr = 'Some long description follows...'),
-         TableView(title = 'Some table',
-                   descr = 'Some description',
+         TableView(title = 'Testing Table Title',
+                   descr = 'Testing Table Description',
                    series = [input_queue_source,
                              server_source],
                    separator = ';',

@@ -30,17 +30,23 @@ terminate_stream(output_stream)
 
 specs = Specs(0, 100, 0.1)
 
-views = [ExperimentSpecsView(title = 'Puper title',
+views = [ExperimentSpecsView(title = 'Testing Experiment Title',
             descr = 'Some long description follows...'),
-         TableView(title = 'Some table',
-                   descr = 'Some description',
+         TableView(title = 'Testing TableView Title',
+                   descr = 'Testing TableView Description',
                    series = [input_queue_source,
                              server_source],
                    separator = ';',
                    link_text = 'Download the CSV file',
                    run_link_text = '$LINK / Run $RUN_INDEX of $RUN_COUNT'),
-         FinalStatsView(title = 'Testing FinalStatsView',
-                   descr = 'Some description',
+         FinalTableView(title = 'Testing FinalTableView Title',
+                   descr = 'Testing FinalTableView Description',
+                   series = [arrival_timer_source.processing_time],
+                   separator = ';',
+                   link_text = 'Download the CSV file',
+                   run_text = 'Серия'),
+         FinalStatsView(title = 'Testing FinalStatsView Title',
+                   descr = 'Testing FinalStatsView Description',
                    series = [arrival_timer_source.processing_time,
                              input_queue_source.count_stats])]
 
