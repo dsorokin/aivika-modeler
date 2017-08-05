@@ -1,6 +1,16 @@
 Aivika Modeler allows building and running discrete event simulation models in Python
 =====================================================================================
 
+Using Aivika Modeler, you can create fast enough discrete event simulation
+models that are executed in native code. Also you can run the simulation
+experiments by the Monte Carlo method, specifying that how the results should 
+be processed. It can plot Time Series, Deviation Chart by the confidence
+interval, plot histograms, save the results in the CSV files for the 
+further analysis and more. All is defined in just a few lines of code written 
+in Python. Then the results of the simulation experiment with charts, statistics 
+summary and links to the saved CSV files is automatically opened in the Web 
+browser.
+
 The model written in Python is translated into its Haskell representation 
 based on using the Aivika simulation libraries, namely `aivika 
 <http://hackage.haskell.org/package/aivika>`_ and `aivika-transformers 
