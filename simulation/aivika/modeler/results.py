@@ -48,7 +48,7 @@ class SamplingStatsSource(ResultSource):
 
     def read_results(self):
         """Return the code that identifies the specified results."""
-        return source
+        return self._source.read_results()
 
     def expand_results(self):
         """Expand the result source and return a list of sources."""
@@ -84,7 +84,7 @@ class TimingStatsSource(ResultSource):
 
     def read_results(self):
         """Return the code that identifies the specified results."""
-        return source
+        return self._source.read_results()
 
     def expand_results(self):
         """Expand the result source and return a list of sources."""
