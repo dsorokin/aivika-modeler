@@ -208,7 +208,7 @@ class ResourcePort(SourcePort):
     def add_result_source(self):
         """Add and return the result source."""
         SourcePort._add_result_source(self)
-        return ResourceSource(self.get_source_name())
+        return ResourceSource(self)
 
 def expect_resource(resource_port):
     """Expect the port to be a resource."""
@@ -236,7 +236,7 @@ class PreemptibleResourcePort(SourcePort):
     def add_result_source(self):
         """Add and return the result source."""
         SourcePort._add_result_source(self)
-        return PreemptibleResourceSource(self.get_source_name())
+        return PreemptibleResourceSource(self)
 
 def expect_preemptible_resource(preemptible_resource_port):
     """Expect the port to be a preemptible resource."""
@@ -272,7 +272,7 @@ class UnboundedQueuePort(SourcePort):
     def add_result_source(self):
         """Add and return the result source."""
         SourcePort._add_result_source(self)
-        return UnboundedQueueSource(self.get_source_name())
+        return UnboundedQueueSource(self)
 
 def expect_unbounded_queue(unbounded_queue_port):
     """Expect the port to be an unbounded queue."""
@@ -309,7 +309,7 @@ class QueuePort(SourcePort):
     def add_result_source(self):
         """Add and return the result source."""
         SourcePort._add_result_source(self)
-        return QueueSource(self.get_source_name())
+        return QueueSource(self)
 
 def expect_queue(queue_port):
     """Expect the port to be a bounded queue."""
@@ -351,7 +351,7 @@ class ServerPort(SourcePort):
     def add_result_source(self):
         """Add and return the result source."""
         SourcePort._add_result_source(self)
-        return ServerSource(self.get_source_name())
+        return ServerSource(self)
 
 def expect_server(server_port):
     """Expect the port to be a server representing some activity."""
@@ -375,7 +375,7 @@ class ArrivalTimerPort(SourcePort):
     def add_result_source(self):
         """Add and return the result source."""
         SourcePort._add_result_source(self)
-        return ArrivalTimerSource(self.get_source_name())
+        return ArrivalTimerSource(self)
 
 def expect_arrival_timer(arrival_timer_port):
     """Expect the port to be an arrival timer that measures the processing time."""
@@ -405,7 +405,7 @@ class RefPort(SourcePort):
     def add_result_source(self):
         """Add and return the result source."""
         SourcePort._add_result_source(self)
-        return RefSource(self.get_source_name())
+        return RefSource(self)
 
 def expect_ref(ref_port):
     """Expect the port to be a reference."""

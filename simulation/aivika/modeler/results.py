@@ -15,59 +15,93 @@ def all_results():
 class ResultSource:
     """Represents the result source."""
 
-    def __init__(self, name):
+    def __init__(self):
         """Initializes a new instance by the specified name."""
-        self._name = name
+        pass
+
+class SamplingStatsSource(ResultSource):
+    """The result source for observation statistics based on samples."""
+
+    def __init__(self, source):
+        """Initializes a new instance by the specified result source."""
+        ResultSource.__init__(self)
+        self._source = source
+        self.count = self._get_source_property('SamplingStatsCountId')
+        self.min_value = self._get_source_property('SamplingStatsMinId')
+        self.max_value = self._get_source_property('SamplingStatsMaxId')
+        self.mean_value = self._get_source_property('SamplingStatsMeanId')
+        self.mean2_value = self._get_source_property('SamplingStatsMean2Id')
+        self.variance = self._get_source_property('SamplingStatsVarianceId')
+        self.deviation = self._get_source_property('SamplingStatsDeviationId')
 
     def read_results(self):
         """Return the code that identifies the specified results."""
-        return 'resultByName ' + encode_str(self._name)
+        return source
 
-class ResourceSource(ResultSource):
+    def _get_source_property(self, result_id):
+        """Return the specified property by the result identifier."""
+        code = self._source.read_results()
+        code += ' >>> expandResults >>> resultById '
+        code += result_id
+        return code
+
+class PortSource(ResultSource):
+    """Represents the result source originated from the port."""
+
+    def __init__(self, port):
+        """Initializes a new instance by the specified port."""
+        ResultSource.__init__(self)
+        self._port = port
+
+    def read_results(self):
+        """Return the code that identifies the specified results."""
+        return 'resultByName ' + encode_str(self._port.get_source_name())
+
+class ResourceSource(PortSource):
     """Represents the resource result source."""
 
-    def __init__(self, name):
-        """Initializes a new instance by the specified name."""
-        ResultSource.__init__(self, name)
+    def __init__(self, port):
+        """Initializes a new instance by the specified port."""
+        PortSource.__init__(self, port)
 
-class PreemptibleResourceSource(ResultSource):
+class PreemptibleResourceSource(PortSource):
     """Represents the preemptible resource result source."""
 
-    def __init__(self, name):
-        """Initializes a new instance by the specified name."""
-        ResultSource.__init__(self, name)
+    def __init__(self, port):
+        """Initializes a new instance by the specified port."""
+        PortSource.__init__(self, port)
 
-class UnboundedQueueSource(ResultSource):
+class UnboundedQueueSource(PortSource):
     """Represents the unbounded queue result source."""
 
-    def __init__(self, name):
-        """Initializes a new instance by the specified name."""
-        ResultSource.__init__(self, name)
+    def __init__(self, port):
+        """Initializes a new instance by the specified port."""
+        PortSource.__init__(self, port)
 
-class QueueSource(ResultSource):
+class QueueSource(PortSource):
     """Represents the bounded queue result source."""
 
-    def __init__(self, name):
-        """Initializes a new instance by the specified name."""
-        ResultSource.__init__(self, name)
+    def __init__(self, port):
+        """Initializes a new instance by the specified port."""
+        PortSource.__init__(self, port)
 
-class ServerSource(ResultSource):
+class ServerSource(PortSource):
     """Represents the server result source."""
 
-    def __init__(self, name):
-        """Initializes a new instance by the specified name."""
-        ResultSource.__init__(self, name)
+    def __init__(self, port):
+        """Initializes a new instance by the specified port."""
+        PortSource.__init__(self, port)
 
-class ArrivalTimerSource(ResultSource):
+class ArrivalTimerSource(PortSource):
     """Represents the arrival timer result source."""
 
-    def __init__(self, name):
-        """Initializes a new instance by the specified name."""
-        ResultSource.__init__(self, name)
+    def __init__(self, port):
+        """Initializes a new instance by the specified port."""
+        PortSource.__init__(self, port)
 
-class RefSource(ResultSource):
+class RefSource(PortSource):
     """Represents the reference result source."""
 
-    def __init__(self, name):
-        """Initializes a new instance by the specified name."""
-        ResultSource.__init__(self, name)
+    def __init__(self, port):
+        """Initializes a new instance by the specified port."""
+        PortSource.__init__(self, port)
