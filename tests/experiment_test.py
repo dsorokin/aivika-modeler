@@ -25,10 +25,15 @@ arrival_timer_source = arrival_timer.add_result_source()
 resource = create_resource(model, 1, name = 'resource')
 resource_source = resource.add_result_source()
 
+pr_resource = create_preemptible_resource(model, 1, name = 'prResource')
+pr_resource_source = pr_resource.add_result_source()
+
 output_stream0 = dequeue_stream(input_queue)
 output_stream1 = request_resource(resource, output_stream0)
-output_stream2 = server_stream(server, output_stream1)
-output_stream3 = release_resource(resource, output_stream2)
+output_stream1a = request_preemptible_resource_with_priority(pr_resource, return_expr(model, 1),output_stream1)
+output_stream2 = server_stream(server, output_stream1a)
+output_stream2a = release_preemptible_resource(pr_resource, output_stream2)
+output_stream3 = release_resource(resource, output_stream2a)
 output_stream  = arrival_timer_stream(arrival_timer, output_stream3)
 
 terminate_stream(output_stream)
@@ -56,7 +61,9 @@ views = [ExperimentSpecsView(title = 'Puper title',
          TableView(title = 'Testing Arrival Timer Properties',
                    series = arrival_timer_source.expand_results()),
          TableView(title = 'Testing Resource Properties',
-                   series = resource_source.expand_results())]
+                   series = resource_source.expand_results()),
+         TableView(title = 'Testing Preemptible Resource Properties',
+                   series = pr_resource_source.expand_results())]
 
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)
