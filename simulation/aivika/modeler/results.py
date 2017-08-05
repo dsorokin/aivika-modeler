@@ -139,6 +139,39 @@ class UnboundedQueueSource(PortSource):
     def __init__(self, port):
         """Initializes a new instance by the specified port."""
         PortSource.__init__(self, port)
+        self.storing_queue_strategy = self._get_source_property('EnqueueStoringStrategyId')
+        self.output_queue_strategy = self._get_source_property('DequeueStrategyId')
+        self.empty = self._get_source_property('QueueNullId')
+        self.count = self._get_source_property('QueueCountId')
+        self.count_stats = TimingStatsSource(self._get_source_property('QueueCountStatsId'))
+        self.enqueue_store_count = self._get_source_property('EnqueueStoreCountId')
+        self.dequeue_count = self._get_source_property('DequeueCountId')
+        self.dequeue_extract_count = self._get_source_property('DequeueExtractCountId')
+        self.enqueue_store_rate = self._get_source_property('EnqueueStoreRateId')
+        self.dequeue_rate = self._get_source_property('DequeueRateId')
+        self.dequeue_extract_rate = self._get_source_property('DequeueExtractRateId')
+        self.wait_time = SamplingStatsSource(self._get_source_property('QueueWaitTimeId'))
+        self.dequeue_wait_time = SamplingStatsSource(self._get_source_property('DequeueWaitTimeId'))
+        self.rate = self._get_source_property('QueueRateId')
+
+    def expand_results(self):
+        """Expand the result source and return a list of sources."""
+        sources = []
+        sources.append(self.storing_queue_strategy)
+        sources.append(self.output_queue_strategy)
+        sources.append(self.empty)
+        sources.append(self.count)
+        sources += self.count_stats.expand_results()
+        sources.append(self.enqueue_store_count)
+        sources.append(self.dequeue_count)
+        sources.append(self.dequeue_extract_count)
+        sources.append(self.enqueue_store_rate)
+        sources.append(self.dequeue_rate)
+        sources.append(self.dequeue_extract_rate)
+        sources += self.wait_time.expand_results()
+        sources += self.dequeue_wait_time.expand_results()
+        sources.append(self.rate)
+        return sources
 
 class QueueSource(PortSource):
     """Represents the bounded queue result source."""
