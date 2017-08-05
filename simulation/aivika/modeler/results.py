@@ -19,6 +19,18 @@ class ResultSource:
         """Initializes a new instance by the specified name."""
         pass
 
+class RawSource(ResultSource):
+    """Represents the result source by the specified raw code."""
+
+    def __init__(self, code):
+        """Initializes a new instance by the specified code."""
+        ResultSource.__init__(self)
+        self._code = code
+
+    def read_results(self):
+        """Return the corresponding code."""
+        return self._code
+
 class SamplingStatsSource(ResultSource):
     """The result source for observation statistics based on samples."""
 
@@ -48,7 +60,7 @@ class SamplingStatsSource(ResultSource):
         code = self._source.read_results()
         code += ' >>> expandResults >>> resultById '
         code += result_id
-        return code
+        return RawSource(code)
 
 class TimingStatsSource(ResultSource):
     """The result source for time-persistent statistics."""
@@ -78,7 +90,7 @@ class TimingStatsSource(ResultSource):
         """Expand the result source and return a list of sources."""
         return [self.count, self.min_value, self.max_value,
             self.mean_value, self.variance, self.deviation,
-            self.mean_time, self.max_time, self.start_time, self.last_time,
+            self.min_time, self.max_time, self.start_time, self.last_time,
             self.sum_value, self.sum2_value]
 
     def _get_source_property(self, result_id):
@@ -86,7 +98,7 @@ class TimingStatsSource(ResultSource):
         code = self._source.read_results()
         code += ' >>> expandResults >>> resultById '
         code += result_id
-        return code
+        return RawSource(code)
 
 class PortSource(ResultSource):
     """Represents the result source originated from the port."""
@@ -99,6 +111,13 @@ class PortSource(ResultSource):
     def read_results(self):
         """Return the code that identifies the specified results."""
         return 'resultByName ' + encode_str(self._port.get_source_name())
+
+    def _get_source_property(self, result_id):
+        """Return the specified property by the result identifier."""
+        code = self.read_results()
+        code += ' >>> resultById '
+        code += result_id
+        return RawSource(code)
 
 class ResourceSource(PortSource):
     """Represents the resource result source."""
@@ -127,6 +146,57 @@ class QueueSource(PortSource):
     def __init__(self, port):
         """Initializes a new instance by the specified port."""
         PortSource.__init__(self, port)
+        self.input_queue_strategy = self._get_source_property('EnqueueStrategyId')
+        self.storing_queue_strategy = self._get_source_property('EnqueueStoringStrategyId')
+        self.output_queue_strategy = self._get_source_property('DequeueStrategyId')
+        self.empty = self._get_source_property('QueueNullId')
+        self.full = self._get_source_property('QueueFullId')
+        self.capacity = self._get_source_property('QueueMaxCountId')
+        self.count = self._get_source_property('QueueCountId')
+        self.count_stats = TimingStatsSource(self._get_source_property('QueueCountStatsId'))
+        self.enqueue_count = self._get_source_property('EnqueueCountId')
+        self.enqueue_lost_count = self._get_source_property('EnqueueLostCountId')
+        self.enqueue_store_count = self._get_source_property('EnqueueStoreCountId')
+        self.dequeue_count = self._get_source_property('DequeueCountId')
+        self.dequeue_extract_count = self._get_source_property('DequeueExtractCountId')
+        self.load_factor = self._get_source_property('QueueLoadFactorId')
+        self.enqueue_rate = self._get_source_property('EnqueueRateId')
+        self.enqueue_store_rate = self._get_source_property('EnqueueStoreRateId')
+        self.dequeue_rate = self._get_source_property('DequeueRateId')
+        self.dequeue_extract_rate = self._get_source_property('DequeueExtractRateId')
+        self.wait_time = SamplingStatsSource(self._get_source_property('QueueWaitTimeId'))
+        self.total_wait_time = SamplingStatsSource(self._get_source_property('QueueTotalWaitTimeId'))
+        self.enqueue_wait_time = SamplingStatsSource(self._get_source_property('EnqueueWaitTimeId'))
+        self.dequeue_wait_time = SamplingStatsSource(self._get_source_property('DequeueWaitTimeId'))
+        self.rate = self._get_source_property('QueueRateId')
+
+    def expand_results(self):
+        """Expand the result source and return a list of sources."""
+        sources = []
+        sources.append(self.input_queue_strategy)
+        sources.append(self.storing_queue_strategy)
+        sources.append(self.output_queue_strategy)
+        sources.append(self.empty)
+        sources.append(self.full)
+        sources.append(self.capacity)
+        sources.append(self.count)
+        sources += self.count_stats.expand_results()
+        sources.append(self.enqueue_count)
+        sources.append(self.enqueue_lost_count)
+        sources.append(self.enqueue_store_count)
+        sources.append(self.dequeue_count)
+        sources.append(self.dequeue_extract_count)
+        sources.append(self.load_factor)
+        sources.append(self.enqueue_rate)
+        sources.append(self.enqueue_store_rate)
+        sources.append(self.dequeue_rate)
+        sources.append(self.dequeue_extract_rate)
+        sources += self.wait_time.expand_results()
+        sources += self.total_wait_time.expand_results()
+        sources += self.enqueue_wait_time.expand_results()
+        sources += self.dequeue_wait_time.expand_results()
+        sources.append(self.rate)
+        return sources
 
 class ServerSource(PortSource):
     """Represents the server result source."""

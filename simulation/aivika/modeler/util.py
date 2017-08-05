@@ -58,11 +58,15 @@ def write_mconcat(write_item_using_indent, collection, file, indent):
     for item in collection:
         if first:
             first = False
+            file.write('(')
             write_item_using_indent(file, item, indent)
+            file.write(')')
         else:
             file.write(' <>\n')
             file.write(indent)
+            file.write('(')
             write_item_using_indent(file, item, indent)
+            file.write(')')
 
 def write_sources(sources, file, indent):
     """Write the result sources in the file."""

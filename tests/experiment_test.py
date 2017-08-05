@@ -32,7 +32,9 @@ views = [ExperimentSpecsView(title = 'Puper title',
                              server_source],
                    separator = ';',
                    link_text = 'Download the CSV file',
-                   run_link_text = '$LINK / Run $RUN_INDEX of $RUN_COUNT')]
+                   run_link_text = '$LINK / Run $RUN_INDEX of $RUN_COUNT'),
+         TableView(title = 'Testing Queue Properties',
+                   series = input_queue_source.expand_results())]
 
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)

@@ -56,6 +56,8 @@ class MainModel(Model):
             self._module_imports.add('import Simulation.Aivika.Trans')
         self._module_imports.add('import Data.Monoid')
         self._module_imports.add('import Data.Functor')
+        self._module_imports.add('import Control.Arrow')
+        self._module_imports.add('import Control.Monad')
 
     def get_main_model(self):
         """Return the main model."""
