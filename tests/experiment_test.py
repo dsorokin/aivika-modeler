@@ -39,7 +39,9 @@ views = [ExperimentSpecsView(title = 'Puper title',
          TableView(title = 'Testing Queue Properties',
                    series = input_queue_source.expand_results()),
          TableView(title = 'Testing Unbounded Queue Properties',
-                   series = unbounded_queue_source.expand_results())]
+                   series = unbounded_queue_source.expand_results()),
+         TableView(title = 'Testing Server Properties',
+                   series = server_source.expand_results())]
 
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)

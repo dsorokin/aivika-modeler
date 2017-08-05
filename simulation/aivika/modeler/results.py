@@ -237,6 +237,39 @@ class ServerSource(PortSource):
     def __init__(self, port):
         """Initializes a new instance by the specified port."""
         PortSource.__init__(self, port)
+        self.init_state = self._get_source_property('ServerInitStateId')
+        self.state = self._get_source_property('ServerStateId')
+        self.total_input_wait_time = self._get_source_property('ServerTotalInputWaitTimeId')
+        self.total_processing_time = self._get_source_property('ServerTotalProcessingTimeId')
+        self.total_output_wait_time = self._get_source_property('ServerTotalOutputWaitTimeId')
+        self.total_preemption_time = self._get_source_property('ServerTotalPreemptionTimeId')
+        self.input_wait_time = SamplingStatsSource(self._get_source_property('ServerInputWaitTimeId'))
+        self.processing_time = SamplingStatsSource(self._get_source_property('ServerProcessingTimeId'))
+        self.output_wait_time = SamplingStatsSource(self._get_source_property('ServerOutputWaitTimeId'))
+        self.preemption_time = SamplingStatsSource(self._get_source_property('ServerPreemptionTimeId'))
+        self.input_wait_factor = self._get_source_property('ServerInputWaitFactorId')
+        self.processing_factor = self._get_source_property('ServerProcessingFactorId')
+        self.output_wait_factor = self._get_source_property('ServerOutputWaitFactorId')
+        self.preemption_factor = self._get_source_property('ServerPreemptionFactorId')
+
+    def expand_results(self):
+        """Expand the result source and return a list of sources."""
+        sources = []
+        sources.append(self.init_state)
+        sources.append(self.state)
+        sources.append(self.total_input_wait_time)
+        sources.append(self.total_processing_time)
+        sources.append(self.total_output_wait_time)
+        sources.append(self.total_preemption_time)
+        sources += self.input_wait_time.expand_results()
+        sources += self.processing_time.expand_results()
+        sources += self.output_wait_time.expand_results()
+        sources += self.preemption_time.expand_results()
+        sources.append(self.input_wait_factor)
+        sources.append(self.processing_factor)
+        sources.append(self.output_wait_factor)
+        sources.append(self.preemption_factor)
+        return sources
 
 class ArrivalTimerSource(PortSource):
     """Represents the arrival timer result source."""
