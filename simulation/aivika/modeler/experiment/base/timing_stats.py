@@ -29,7 +29,7 @@ class TimingStatsView(BasicExperimentView):
             func = lambda file, indent: file.write(encode_str(self.title))
             fields['timingStatsTitle'] = func
         if not (self.run_title is None):
-            func = lambda file, indent: file.write(encode_str(self.title))
+            func = lambda file, indent: file.write(encode_str(self.run_title))
             fields['timingStatsRunTitle'] = func
         if not (self.descr is None):
             func = lambda file, indent: file.write(encode_str(self.descr))

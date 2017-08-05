@@ -29,7 +29,7 @@ class LastValueView(BasicExperimentView):
             func = lambda file, indent: file.write(encode_str(self.title))
             fields['lastValueTitle'] = func
         if not (self.run_title is None):
-            func = lambda file, indent: file.write(encode_str(self.title))
+            func = lambda file, indent: file.write(encode_str(self.run_title))
             fields['lastValueRunTitle'] = func
         if not (self.descr is None):
             func = lambda file, indent: file.write(encode_str(self.descr))
