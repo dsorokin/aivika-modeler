@@ -78,7 +78,13 @@ views = [ExperimentSpecsView(title = 'Testing Experiment Title',
                   height = 500,
                   series = [arrival_timer_source.processing_time.mean_value],
                   plot_title = 'Testing Plot Title',
-                  run_plot_title = '$PLOT_TITLE / Run $RUN_INDEX of $RUN_COUNT')]
+                  run_plot_title = '$PLOT_TITLE / Run $RUN_INDEX of $RUN_COUNT'),
+         FinalHistogramView(title = 'Testing FinalHistogramView Title',
+                  descr = 'Testing FinalHistogramView Description',
+                  width = 800,
+                  height = 500,
+                  series = [arrival_timer_source.processing_time.mean_value],
+                  plot_title = 'Testing Plot Title')]
 
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)
