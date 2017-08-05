@@ -38,6 +38,49 @@ class SamplingStatsSource(ResultSource):
         """Return the code that identifies the specified results."""
         return source
 
+    def expand_results(self):
+        """Expand the result source and return a list of sources."""
+        return [self.count, self.min_value, self.max_value,
+            self.mean_value, self.mean2_value, self.variance, self.deviation]
+
+    def _get_source_property(self, result_id):
+        """Return the specified property by the result identifier."""
+        code = self._source.read_results()
+        code += ' >>> expandResults >>> resultById '
+        code += result_id
+        return code
+
+class TimingStatsSource(ResultSource):
+    """The result source for time-persistent statistics."""
+
+    def __init__(self, source):
+        """Initializes a new instance by the specified result source."""
+        ResultSource.__init__(self)
+        self._source = source
+        self.count = self._get_source_property('TimingStatsCountId')
+        self.min_value = self._get_source_property('TimingStatsMinId')
+        self.max_value = self._get_source_property('TimingStatsMaxId')
+        self.mean_value = self._get_source_property('TimingStatsMeanId')
+        self.variance = self._get_source_property('TimingStatsVarianceId')
+        self.deviation = self._get_source_property('TimingStatsDeviationId')
+        self.min_time = self._get_source_property('TimingStatsMinTimeId')
+        self.max_time = self._get_source_property('TimingStatsMaxTimeId')
+        self.start_time = self._get_source_property('TimingStatsStartTimeId')
+        self.last_time = self._get_source_property('TimingStatsLastTimeId')
+        self.sum_value = self._get_source_property('TimingStatsSumId')
+        self.sum2_value = self._get_source_property('TimingStatsSum2Id')
+
+    def read_results(self):
+        """Return the code that identifies the specified results."""
+        return source
+
+    def expand_results(self):
+        """Expand the result source and return a list of sources."""
+        return [self.count, self.min_value, self.max_value,
+            self.mean_value, self.variance, self.deviation,
+            self.mean_time, self.max_time, self.start_time, self.last_time,
+            self.sum_value, self.sum2_value]
+
     def _get_source_property(self, result_id):
         """Return the specified property by the result identifier."""
         code = self._source.read_results()
