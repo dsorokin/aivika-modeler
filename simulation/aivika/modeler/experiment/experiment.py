@@ -3,6 +3,7 @@
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
 import os
+import webbrowser
 
 from simulation.aivika.modeler.util import *
 
@@ -68,7 +69,8 @@ class Experiment:
 
     def open(self):
         """Open the experiment results in the browser."""
-        pass
+        url = self.get_path() + os.sep + 'index.html'
+        webbrowser.open(url)
 
 def get_experiment_path():
     """Get the experiment directory path."""
