@@ -5,3 +5,4 @@
 from simulation.aivika.modeler.experiment.experiment import *
 from simulation.aivika.modeler.experiment.experiment_renderer import *
 from simulation.aivika.modeler.experiment.base import *
+from simulation.aivika.modeler.experiment.chart import *
