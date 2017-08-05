@@ -277,6 +277,13 @@ class ArrivalTimerSource(PortSource):
     def __init__(self, port):
         """Initializes a new instance by the specified port."""
         PortSource.__init__(self, port)
+        self.processing_time = SamplingStatsSource(self._get_source_property('ArrivalProcessingTimeId'))
+
+    def expand_results(self):
+        """Expand the result source and return a list of sources."""
+        sources = []
+        sources += self.processing_time.expand_results()
+        return sources
 
 class RefSource(PortSource):
     """Represents the reference result source."""
