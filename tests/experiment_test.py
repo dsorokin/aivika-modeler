@@ -22,26 +22,13 @@ server_source = server.add_result_source()
 arrival_timer = create_arrival_timer(model, name = 'arrivalTimer')
 arrival_timer_source = arrival_timer.add_result_source()
 
-resource = create_resource(model, 1, name = 'resource')
-resource_source = resource.add_result_source()
-
-pr_resource = create_preemptible_resource(model, 1, name = 'prResource')
-pr_resource_source = pr_resource.add_result_source()
-
 output_stream0 = dequeue_stream(input_queue)
-output_stream1 = request_resource(resource, output_stream0)
-output_stream1a = request_preemptible_resource_with_priority(pr_resource, return_expr(model, 1),output_stream1)
-output_stream2 = server_stream(server, output_stream1a)
-output_stream2a = release_preemptible_resource(pr_resource, output_stream2)
-output_stream3 = release_resource(resource, output_stream2a)
-output_stream  = arrival_timer_stream(arrival_timer, output_stream3)
+output_stream1 = server_stream(server, output_stream0)
+output_stream  = arrival_timer_stream(arrival_timer, output_stream1)
 
 terminate_stream(output_stream)
 
 specs = Specs(0, 100, 0.1)
-
-unbounded_queue = create_unbounded_queue(model, data_type, name = 'unboundedQueue')
-unbounded_queue_source = unbounded_queue.add_result_source()
 
 views = [ExperimentSpecsView(title = 'Puper title',
             descr = 'Some long description follows...'),
@@ -52,18 +39,10 @@ views = [ExperimentSpecsView(title = 'Puper title',
                    separator = ';',
                    link_text = 'Download the CSV file',
                    run_link_text = '$LINK / Run $RUN_INDEX of $RUN_COUNT'),
-         TableView(title = 'Testing Queue Properties',
-                   series = input_queue_source.expand_results()),
-         TableView(title = 'Testing Unbounded Queue Properties',
-                   series = unbounded_queue_source.expand_results()),
-         TableView(title = 'Testing Server Properties',
-                   series = server_source.expand_results()),
-         TableView(title = 'Testing Arrival Timer Properties',
-                   series = arrival_timer_source.expand_results()),
-         TableView(title = 'Testing Resource Properties',
-                   series = resource_source.expand_results()),
-         TableView(title = 'Testing Preemptible Resource Properties',
-                   series = pr_resource_source.expand_results())]
+         FinalStatsView(title = 'Testing FinalStatsView',
+                   descr = 'Some description',
+                   series = [arrival_timer_source.processing_time,
+                             input_queue_source.count_stats])]
 
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)
