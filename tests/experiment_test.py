@@ -52,7 +52,10 @@ views = [ExperimentSpecsView(title = 'Testing Experiment Title',
          FinalStatsView(title = 'Testing FinalStatsView Title',
                    descr = 'Testing FinalStatsView Description',
                    series = [arrival_timer_source.processing_time,
-                             input_queue_source.count_stats])]
+                             input_queue_source.count_stats]),
+         LastValueView(title = 'Testing LastValueView Title',
+                   descr = 'Testing LastValueView Description',
+                   series = [arrival_timer_source.processing_time.mean_value])]
 
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)
