@@ -69,7 +69,7 @@ class Experiment:
 
     def open(self):
         """Open the experiment results in the browser."""
-        url = self.get_path() + os.sep + 'index.html'
+        url = 'file://' + self.get_path() + os.sep + 'index.html'
         webbrowser.open(url)
 
 def get_experiment_path():
