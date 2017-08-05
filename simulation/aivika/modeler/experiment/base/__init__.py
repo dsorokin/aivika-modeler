@@ -9,3 +9,4 @@ from simulation.aivika.modeler.experiment.base.last_value import *
 from simulation.aivika.modeler.experiment.base.table import *
 from simulation.aivika.modeler.experiment.base.final_table import *
 from simulation.aivika.modeler.experiment.base.final_stats import *
+from simulation.aivika.modeler.experiment.base.timing_stats import *

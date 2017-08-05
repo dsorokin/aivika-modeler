@@ -53,7 +53,12 @@ views = [ExperimentSpecsView(title = 'Testing Experiment Title',
                    descr = 'Testing FinalStatsView Description',
                    series = [arrival_timer_source.processing_time,
                              input_queue_source.count_stats]),
+         TimingStatsView(title = 'Testing TimingStatsView Title',
+                   run_title = '$TITLE / Run $RUN_INDEX of $RUN_COUNT',
+                   descr = 'Testing TimingStatsView Description',
+                   series = [server_source.processing_factor]),
          LastValueView(title = 'Testing LastValueView Title',
+                   run_title = '$TITLE / Run $RUN_INDEX of $RUN_COUNT',
                    descr = 'Testing LastValueView Description',
                    series = [arrival_timer_source.processing_time.mean_value])]
 
