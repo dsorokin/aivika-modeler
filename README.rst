@@ -1,7 +1,7 @@
 Aivika Modeler allows building and running discrete event simulation models in Python
 =====================================================================================
 
-Using Aivika Modeler, you can create fast enough discrete event simulation
+Using Aivika Modeler, you can create quite fast discrete event simulation
 models that are executed in native code. Also you can run the simulation
 experiments by the Monte Carlo method, specifying that how the results should 
 be processed. It can plot Time Series, Deviation Chart by the confidence
