@@ -22,8 +22,14 @@ server_source = server.add_result_source()
 arrival_timer = create_arrival_timer(model, name = 'arrivalTimer')
 arrival_timer_source = arrival_timer.add_result_source()
 
-output_stream0 = server_stream(server, dequeue_stream(input_queue))
-output_stream  = arrival_timer_stream(arrival_timer, output_stream0)
+resource = create_resource(model, 1, name = 'resource')
+resource_source = resource.add_result_source()
+
+output_stream0 = dequeue_stream(input_queue)
+output_stream1 = request_resource(resource, output_stream0)
+output_stream2 = server_stream(server, output_stream1)
+output_stream3 = release_resource(resource, output_stream2)
+output_stream  = arrival_timer_stream(arrival_timer, output_stream3)
 
 terminate_stream(output_stream)
 
@@ -48,7 +54,9 @@ views = [ExperimentSpecsView(title = 'Puper title',
          TableView(title = 'Testing Server Properties',
                    series = server_source.expand_results()),
          TableView(title = 'Testing Arrival Timer Properties',
-                   series = arrival_timer_source.expand_results())]
+                   series = arrival_timer_source.expand_results()),
+         TableView(title = 'Testing Resource Properties',
+                   series = resource_source.expand_results())]
 
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)

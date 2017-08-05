@@ -125,6 +125,27 @@ class ResourceSource(PortSource):
     def __init__(self, port):
         """Initializes a new instance by the specified port."""
         PortSource.__init__(self, port)
+        self.count = self._get_source_property('ResourceCountId')
+        self.count_stats = TimingStatsSource(self._get_source_property('ResourceCountStatsId'))
+        self.utilisation_count = self._get_source_property('ResourceUtilisationCountId')
+        self.utilisation_count_stats = TimingStatsSource(self._get_source_property('ResourceUtilisationCountStatsId'))
+        self.queue_count = self._get_source_property('ResourceQueueCountId')
+        self.queue_count_stats = TimingStatsSource(self._get_source_property('ResourceQueueCountStatsId'))
+        self.total_wait_time = self._get_source_property('ResourceTotalWaitTimeId')
+        self.wait_time = SamplingStatsSource(self._get_source_property('ResourceWaitTimeId'))
+
+    def expand_results(self):
+        """Expand the result source and return a list of sources."""
+        sources = []
+        sources.append(self.count)
+        sources += self.count_stats.expand_results()
+        sources.append(self.utilisation_count)
+        sources += self.utilisation_count_stats.expand_results()
+        sources.append(self.queue_count)
+        sources += self.queue_count_stats.expand_results()
+        sources.append(self.total_wait_time)
+        sources += self.wait_time.expand_results()
+        return sources
 
 class PreemptibleResourceSource(PortSource):
     """Represents the preemptible resource result source."""
