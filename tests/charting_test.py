@@ -52,6 +52,16 @@ views = [ExperimentSpecsView(title = 'Testing Experiment Title',
                                    arrival_timer_source.processing_time.max_value],
                   right_y_series = [arrival_timer_source.processing_time.mean_value],
                   plot_title = 'Testing Plot Title',
+                  run_plot_title = '$PLOT_TITLE / Run $RUN_INDEX of $RUN_COUNT'),
+         XYChartView(title = 'Testing XYChartView Title',
+                  descr = 'Testing XYChartView Description',
+                  width = 800,
+                  height = 500,
+                  x_series = arrival_timer_source.processing_time.mean_value,
+                  left_y_series = [arrival_timer_source.processing_time.min_value,
+                                   arrival_timer_source.processing_time.max_value],
+                  right_y_series = [arrival_timer_source.processing_time.mean_value],
+                  plot_title = 'Testing Plot Title',
                   run_plot_title = '$PLOT_TITLE / Run $RUN_INDEX of $RUN_COUNT')]
 
 renderer = ExperimentRendererUsingDiagrams(views)
