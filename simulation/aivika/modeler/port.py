@@ -53,6 +53,10 @@ class Port:
         """Return the port name."""
         return self._name
 
+    def get_source_name(self):
+        """Return the result source name."""
+        return self._source_name
+
     def get_mangled_name(self):
         """Return the real possibly mangled name of the port."""
         return self._mangled_name
@@ -200,6 +204,7 @@ class ResourcePort(SourcePort):
             data_type.append(base_comp)
         data_type.append(queue_strategy)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
+        self.result_source = ResourceSource(self.get_source_name())
 
 def expect_resource(resource_port):
     """Expect the port to be a resource."""
@@ -223,6 +228,7 @@ class PreemptibleResourcePort(SourcePort):
         if not (base_comp is None):
             data_type.append(base_comp)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
+        self.result_source = PreemptibleResourceSource(self.get_source_name())
 
 def expect_preemptible_resource(preemptible_resource_port):
     """Expect the port to be a preemptible resource."""
@@ -250,6 +256,7 @@ class UnboundedQueuePort(SourcePort):
         data_type.append(output_queue_strategy)
         data_type.append(item_data_type)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
+        self.result_source = UnboundedQueueSource(self.get_source_name())
 
     def get_item_data_type(self):
         """Get the item data type"""
@@ -282,6 +289,7 @@ class QueuePort(SourcePort):
         data_type.append(output_queue_strategy)
         data_type.append(item_data_type)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
+        self.result_source = QueueSource(self.get_source_name())
 
     def get_item_data_type(self):
         """Get the item data type"""
@@ -311,6 +319,7 @@ class ServerPort(SourcePort):
         data_type.append(input_data_type)
         data_type.append(output_data_type)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
+        self.result_source = ServerSource(self.get_source_name())
 
     def get_state_data_type(self):
         """Get the state data type"""
@@ -342,6 +351,7 @@ class ArrivalTimerPort(SourcePort):
         if not (base_comp is None):
             data_type.append(base_comp)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
+        self.result_source = ArrivalTimerSource(self.get_source_name())
 
 def expect_arrival_timer(arrival_timer_port):
     """Expect the port to be an arrival timer that measures the processing time."""
@@ -363,6 +373,7 @@ class RefPort(SourcePort):
             data_type.append(base_comp)
         data_type.append(item_data_type)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
+        self.result_source = RefSource(self.get_source_name())
 
     def get_item_data_type(self):
         """Get the item data type"""
