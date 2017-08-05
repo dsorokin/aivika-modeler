@@ -39,11 +39,20 @@ views = [ExperimentSpecsView(title = 'Testing Experiment Title',
                             server_source]),
          DeviationChartView(title = 'Testing DeviationChartView Title',
                   descr = 'Testing DeviationChartView Description',
-                  width = 500,
-                  height = 300,
+                  width = 800,
+                  height = 500,
                   left_y_series = [arrival_timer_source.processing_time],
                   right_y_series = [server_source.processing_time],
-                  plot_title = 'Testing Plot Title')]
+                  plot_title = 'Testing Plot Title'),
+         TimeSeriesView(title = 'Testing TimeSeriesView Title',
+                  descr = 'Testing TimeSeriesView Description',
+                  width = 800,
+                  height = 500,
+                  left_y_series = [arrival_timer_source.processing_time.min_value,
+                                   arrival_timer_source.processing_time.max_value],
+                  right_y_series = [arrival_timer_source.processing_time.mean_value],
+                  plot_title = 'Testing Plot Title',
+                  run_plot_title = '$PLOT_TITLE / Run $RUN_INDEX of $RUN_COUNT')]
 
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)

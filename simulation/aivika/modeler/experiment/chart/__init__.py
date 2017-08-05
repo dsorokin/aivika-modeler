@@ -3,3 +3,4 @@
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
 from simulation.aivika.modeler.experiment.chart.deviation_chart import *
+from simulation.aivika.modeler.experiment.chart.time_series import *
