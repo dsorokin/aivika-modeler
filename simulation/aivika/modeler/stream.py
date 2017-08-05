@@ -9,6 +9,7 @@ from simulation.aivika.modeler.transform import *
 from simulation.aivika.modeler.queue import *
 from simulation.aivika.modeler.resource import *
 from simulation.aivika.modeler.data_type import *
+from simulation.aivika.modeler.util import *
 
 def empty_stream(model, item_data_type):
     """Return an empty stream by the specified model and item data type."""
@@ -148,8 +149,8 @@ def transform_stream(transform, stream_port):
     s = stream_port
     expect_transform(t)
     expect_stream(s)
-    model = s.get_model().get_main_model()
-    if model != t.get_model().get_main_model():
+    model = s.get_model()
+    if model.get_main_model() != t.get_model().get_main_model():
         raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the transform to belong to the same model')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> liftEvent '
@@ -168,8 +169,8 @@ def within_stream(expr, stream_port):
     s = stream_port
     expect_expr(e)
     expect_stream(s)
-    model = s.get_model().get_main_model()
-    if model != e.get_model().get_main_model():
+    model = s.get_model()
+    if model.get_main_model() != e.get_model().get_main_model():
         raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> liftEvent '
@@ -188,13 +189,31 @@ def hold_stream(expr, stream_port):
     s = stream_port
     expect_expr(e)
     expect_stream(stream_port)
-    model = s.get_model().get_main_model()
-    if model != e.get_model().get_main_model():
+    model = s.get_model()
+    if model.get_main_model() != e.get_model().get_main_model():
         raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
     item_data_type = s.get_item_data_type()
     code = 'return $ mapStreamM (\\a -> do { dt <- liftEvent $ '
     code += e.read('a')
     code += '; holdProcess dt; return a }) '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
+def trace_stream(stream_port, request_message = None, response_message = None):
+    """Allows tracing the input stream within the resulting stream."""
+    s = stream_port
+    expect_stream(stream_port)
+    model = s.get_model()
+    item_data_type = s.get_item_data_type()
+    code = 'return $ traceStream '
+    code += encode_maybe(encode_str, request_message)
+    code += ' '
+    code += encode_maybe(encode_str, response_message)
+    code += ' '
     code += s.read()
     y = StreamPort(model, item_data_type)
     y.write(code)

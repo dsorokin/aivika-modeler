@@ -96,4 +96,4 @@ s07 = arrival_timer_stream(input_arrival_timer, input_stream)
 
 unbounded_enqueue_stream(inspection_queue, s07)
 
-model.run(standalone = True, specs = specs)
+model.run(specs)

@@ -3,6 +3,8 @@
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
 from simulation.aivika.modeler.data_type import *
+from simulation.aivika.modeler.results import *
+from simulation.aivika.modeler.util import *
 
 class InvalidPortException(Exception):
     """Raised when the port is invalid."""
@@ -22,10 +24,13 @@ class Port:
         self._data_type = data_type
         if name is None:
             self._name = '_port_' + str(Port._next_id)
+            self._source_name = self._name
+            self._mangled_name = model.get_var_prefix() + self._name
             Port._next_id += 1
         else:
             self._name = name
-        self._mangled_name = model.get_var_prefix() + self._name
+            self._source_name = model.get_source_prefix() + self._name
+            self._mangled_name = model.get_var_prefix() + '_user_' + self._name
         if descr is None:
             self._descr = ''
         else:
@@ -82,19 +87,10 @@ class Port:
 
     def _add_result_source(self):
         """Add this port to the result sources."""
-        name = '"' + self._encode_str(self._mangled_name) + '"'
-        descr = '"' + self._encode_str(self._descr) + '"'
+        name = encode_str(self._source_name)
+        descr = encode_str(self._descr)
         code = 'resultSource ' + name + ' ' + descr + ' ' + self._mangled_name
         self._model.add_result_source(code)
-
-    def _encode_str(self, str):
-        """Encode the string."""
-        str = str.replace('\r\n', ' ')
-        str = str.replace('\n', ' ')
-        str = str.replace('\r', ' ')
-        str = str.replace('\\', '\\\\')
-        str = str.replace('"', '\\"')
-        return str
 
 class PortOnce(Port):
     """The port that can be used as input and output only once."""
@@ -148,9 +144,9 @@ def expect_same_model(ports):
     """Expect the ports to be belong to the same model."""
     if len(ports) > 0:
         p0 = ports[0]
-        model = p0.get_model().get_main_model()
+        model = p0.get_model()
         for p in ports:
-            if model != p.get_model().get_main_model():
+            if model.get_main_model() != p.get_model().get_main_model():
                 raise InvalidPortException('Expected ports ' + p0.get_name() + ' and ' + p.get_name() + ' to belong to the same model.')
 
 def expect_same_data_type(ports):

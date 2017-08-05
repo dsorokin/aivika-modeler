@@ -19,3 +19,5 @@ from simulation.aivika.modeler.server import *
 from simulation.aivika.modeler.server_random import *
 from simulation.aivika.modeler.arrival_timer import *
 from simulation.aivika.modeler.ref import *
+from simulation.aivika.modeler.results import *
+from simulation.aivika.modeler.experiment import *

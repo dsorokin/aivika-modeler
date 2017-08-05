@@ -187,10 +187,13 @@ ref = create_ref(model, 7.8, DOUBLE_TYPE, 'ref')
 
 port21a = transform_stream(field1.expr_transform(read_ref(ref)), port20)
 port21b = within_stream(write_ref(ref, return_expr(model, 9.1)), port21a)
-port21 = port21b
+port21c = trace_stream(port21b)
+port21d = trace_stream(port21c, request_message = 'Request')
+port21e = trace_stream(port21d, request_message = 'Request', response_message = 'Response')
+port21 = port21e
 
 terminate_stream(port21)
 
 specs = Specs(0, 100, 0.1)
 
-model.run(standalone = True, specs = specs)
+model.run(specs)
