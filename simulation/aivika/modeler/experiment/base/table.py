@@ -2,6 +2,7 @@
 #
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
+from simulation.aivika.modeler.results import *
 from simulation.aivika.modeler.util import *
 from simulation.aivika.modeler.experiment.base.types import *
 
@@ -34,4 +35,16 @@ class TableView(BasicExperimentView):
         if not (self.descr is None):
             func = lambda file, indent: file.write(encode_str(self.descr))
             fields['tableDescription'] = func
+        if not (self.series is None):
+            func = lambda file, indent: write_sources(self.series, file, indent + '  ')
+            fields['tableSeries'] = func
+        if not (self.separator is None):
+            func = lambda file, indent: file.write(encode_str(self.separator))
+            fields['tableSeparator'] = func
+        if not (self.link_text is None):
+            func = lambda file, indent: file.write(encode_str(self.link_text))
+            fields['tableLinkText'] = func
+        if not (self.run_link_text is None):
+            func = lambda file, indent: file.write(encode_str(self.run_link_text))
+            fields['tableRunLinkText'] = func
         write_record_fields(fields, file, indent + '  ')

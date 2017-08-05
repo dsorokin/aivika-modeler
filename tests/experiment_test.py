@@ -24,7 +24,16 @@ terminate_stream(output_stream)
 
 specs = Specs(0, 100, 0.1)
 
-views = [ExperimentSpecsView(title = 'Puper title', descr = 'Some long description follows...')]
+views = [ExperimentSpecsView(title = 'Puper title',
+            descr = 'Some long description follows...'),
+         TableView(title = 'Some table',
+                   descr = 'Some description',
+                   series = [input_queue.result_source,
+                             server.result_source],
+                   separator = ';',
+                   link_text = 'Download the CSV file',
+                   run_link_text = '$LINK / Run $RUN_INDEX of $RUN_COUNT')]
+
 renderer = ExperimentRendererUsingDiagrams(views)
 experiment = Experiment(renderer, run_count = 3)
 

@@ -2,6 +2,16 @@
 #
 # Licensed under BSD3. See the LICENSE.txt file in the root of this distribution.
 
+from simulation.aivika.modeler.util import *
+
+def empty_results():
+    """Return empty results."""
+    return 'mempty'
+
+def all_results():
+    """Return all results."""
+    return 'id'
+
 class ResultSource:
     """Represents the result source."""
 
@@ -11,7 +21,7 @@ class ResultSource:
 
     def read_results(self):
         """Return the code that identifies the specified results."""
-        return self._name
+        return 'resultByName ' + encode_str(self._name)
 
 class ResourceSource(ResultSource):
     """Represents the resource result source."""

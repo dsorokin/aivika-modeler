@@ -4,3 +4,4 @@
 
 from simulation.aivika.modeler.experiment.base.types import *
 from simulation.aivika.modeler.experiment.base.experiment_specs import *
+from simulation.aivika.modeler.experiment.base.table import *

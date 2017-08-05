@@ -52,7 +52,7 @@ def write_record_fields(write_item_using_indent_dict, file, indent):
     if not first:
         file.write(' }')
 
-def write_mconcat(write_item_using_ident, collection, file, indent):
+def write_mconcat(write_item_using_indent, collection, file, indent):
     """Write the monoid concatination in the file."""
     first = True
     for item in collection:
@@ -63,3 +63,8 @@ def write_mconcat(write_item_using_ident, collection, file, indent):
             file.write(' <>\n')
             file.write(indent)
             write_item_using_indent(file, item, indent)
+
+def write_sources(sources, file, indent):
+    """Write the result sources in the file."""
+    func = lambda file, item, indent: file.write(item.read_results())
+    write_mconcat(func, sources, file, indent)
