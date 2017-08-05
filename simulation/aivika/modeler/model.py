@@ -158,7 +158,7 @@ class MainModel(Model):
         if status == 0:
             status = os.system('stack exec modeling-project-exe')
         os.chdir(cwd)
-        if not (experiment is None):
+        if (status == 0) and (not (experiment is None)):
             experiment.open()
         return status
 
