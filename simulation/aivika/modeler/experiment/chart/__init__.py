@@ -5,3 +5,4 @@
 from simulation.aivika.modeler.experiment.chart.deviation_chart import *
 from simulation.aivika.modeler.experiment.chart.time_series import *
 from simulation.aivika.modeler.experiment.chart.xy_chart import *
+from simulation.aivika.modeler.experiment.chart.final_xy_chart import *
