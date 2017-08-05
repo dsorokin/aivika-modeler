@@ -26,3 +26,6 @@ Python so that it would be possible to use the component from Python.
 There is a separation of concerns. Python is used as a high-level glue for 
 combining components to build the complete simulation model, while Haskell is 
 used as a high-level modeling language for writing such components.
+
+You can find a more full information on website `www.aivikasoft.com
+<http://www.aivikasoft.com>`_.
