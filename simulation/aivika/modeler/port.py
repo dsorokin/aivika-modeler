@@ -140,7 +140,7 @@ class SourcePort(Port):
         """Initializes a new port."""
         Port.__init__(self, model, data_type, name, descr, comp)
 
-    def add_result_source(self):
+    def _add_result_source(self):
         """Add this port to the result sources."""
         Port._add_result_source(self)
 
@@ -204,7 +204,11 @@ class ResourcePort(SourcePort):
             data_type.append(base_comp)
         data_type.append(queue_strategy)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
-        self.result_source = ResourceSource(self.get_source_name())
+
+    def add_result_source(self):
+        """Add and return the result source."""
+        SourcePort._add_result_source(self)
+        return ResourceSource(self.get_source_name())
 
 def expect_resource(resource_port):
     """Expect the port to be a resource."""
@@ -228,7 +232,11 @@ class PreemptibleResourcePort(SourcePort):
         if not (base_comp is None):
             data_type.append(base_comp)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
-        self.result_source = PreemptibleResourceSource(self.get_source_name())
+
+    def add_result_source(self):
+        """Add and return the result source."""
+        SourcePort._add_result_source(self)
+        return PreemptibleResourceSource(self.get_source_name())
 
 def expect_preemptible_resource(preemptible_resource_port):
     """Expect the port to be a preemptible resource."""
@@ -256,11 +264,15 @@ class UnboundedQueuePort(SourcePort):
         data_type.append(output_queue_strategy)
         data_type.append(item_data_type)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
-        self.result_source = UnboundedQueueSource(self.get_source_name())
 
     def get_item_data_type(self):
         """Get the item data type"""
         return self._item_data_type
+
+    def add_result_source(self):
+        """Add and return the result source."""
+        SourcePort._add_result_source(self)
+        return UnboundedQueueSource(self.get_source_name())
 
 def expect_unbounded_queue(unbounded_queue_port):
     """Expect the port to be an unbounded queue."""
@@ -289,11 +301,15 @@ class QueuePort(SourcePort):
         data_type.append(output_queue_strategy)
         data_type.append(item_data_type)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
-        self.result_source = QueueSource(self.get_source_name())
 
     def get_item_data_type(self):
         """Get the item data type"""
         return self._item_data_type
+
+    def add_result_source(self):
+        """Add and return the result source."""
+        SourcePort._add_result_source(self)
+        return QueueSource(self.get_source_name())
 
 def expect_queue(queue_port):
     """Expect the port to be a bounded queue."""
@@ -319,7 +335,6 @@ class ServerPort(SourcePort):
         data_type.append(input_data_type)
         data_type.append(output_data_type)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
-        self.result_source = ServerSource(self.get_source_name())
 
     def get_state_data_type(self):
         """Get the state data type"""
@@ -332,6 +347,11 @@ class ServerPort(SourcePort):
     def get_output_data_type(self):
         """Get the output data type"""
         return self._output_data_type
+
+    def add_result_source(self):
+        """Add and return the result source."""
+        SourcePort._add_result_source(self)
+        return ServerSource(self.get_source_name())
 
 def expect_server(server_port):
     """Expect the port to be a server representing some activity."""
@@ -351,7 +371,11 @@ class ArrivalTimerPort(SourcePort):
         if not (base_comp is None):
             data_type.append(base_comp)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
-        self.result_source = ArrivalTimerSource(self.get_source_name())
+
+    def add_result_source(self):
+        """Add and return the result source."""
+        SourcePort._add_result_source(self)
+        return ArrivalTimerSource(self.get_source_name())
 
 def expect_arrival_timer(arrival_timer_port):
     """Expect the port to be an arrival timer that measures the processing time."""
@@ -373,11 +397,15 @@ class RefPort(SourcePort):
             data_type.append(base_comp)
         data_type.append(item_data_type)
         SourcePort.__init__(self, model, data_type, name, descr, comp)
-        self.result_source = RefSource(self.get_source_name())
 
     def get_item_data_type(self):
         """Get the item data type"""
         return self._item_data_type
+
+    def add_result_source(self):
+        """Add and return the result source."""
+        SourcePort._add_result_source(self)
+        return RefSource(self.get_source_name())
 
 def expect_ref(ref_port):
     """Expect the port to be a reference."""
