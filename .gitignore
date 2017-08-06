@@ -1,5 +1,6 @@
 dist/
 target/
+experiment*/
 .DS_Store
 __pycache__
 *.pyc
