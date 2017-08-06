@@ -90,6 +90,12 @@ and chart plotting took about 1 minute on my laptop.
   # it runs the simulation experiment by the Monte Carlo method
   model.run(specs, experiment)
 
+After running the simulation experiment, you will see the Deviation Charts
+that will show the confidence intervals by rule 3 sigma. Also you will see
+a general information about the experiment as well as a summary statistics
+for some properties such as the queue count statistics, queue wait time,
+the processing time of transacts and the server processing factor.
+
 How does it work
 ----------------
 
@@ -113,7 +119,7 @@ The main operating systems are supported: Windows, Linux and macOS.
 
 Then you can install the ``aivika-modeler`` package using *pip* in usual way.
 
-Combining of Haskell and Python
+Combining Haskell and Python
 -------------------------------
 
 In most cases you do not need to know the Haskell programming language.
