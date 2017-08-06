@@ -80,14 +80,14 @@ terminate_stream(stream5)
 
 # reset the statistics after 30 time units
 reset_time = 30
-reset_queue(queue1, 0)
-reset_queue(queue2, 0)
-reset_server(workstation1, 0)
-reset_server(workstation2, 0)
-reset_arrival_timer(timer, 0)
+reset_queue(queue1, reset_time)
+reset_queue(queue2, reset_time)
+reset_server(workstation1, reset_time)
+reset_server(workstation2, reset_time)
+reset_arrival_timer(timer, reset_time)
 
 # it defines the simulation specs
-specs = Specs(0 - reset_time, 300, 0.1)
+specs = Specs(0, 300, 0.1)
 
 processing_factors = [workstation1_source.processing_factor,
     workstation2_source.processing_factor]
