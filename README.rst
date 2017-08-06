@@ -30,7 +30,7 @@ and chart plotting took about 1 minute on my laptop.
 
   model = MainModel()
 
-  # the transacts can have assignable and updatable fields, but is not shown here
+  # the transacts can have assignable and updatable fields, but it is not used here
   data_type = TransactType(model, 'Transact')
 
   # we have two input random streams of different nature
@@ -44,7 +44,7 @@ and chart plotting took about 1 minute on my laptop.
   queue = create_queue(model, data_type, 5, name = 'queue', descr = 'The input queue')
   queue_source = queue.add_result_source()
 
-  # try to enqueue the input stream or remove the item if the queue is full
+  # try to enqueue the input stream or remove the items when the queue is full
   enqueue_stream_or_remove_item(queue, input_stream)
 
   # the server represents some activivity that we model by random delays
@@ -90,11 +90,12 @@ and chart plotting took about 1 minute on my laptop.
   # it runs the simulation experiment by the Monte Carlo method
   model.run(specs, experiment)
 
-After running the simulation experiment, you will see the Deviation Charts
+After running the simulation experiment, you will see the Deviation charts
 that will show the confidence intervals by rule 3 sigma. Also you will see
 a general information about the experiment as well as a summary statistics
-for some properties such as the queue count statistics, queue wait time,
-the processing time of transacts and the server processing factor.
+for some properties such as the queue size, queue wait time,
+the processing time of transacts and the server processing factor
+in the final time point.
 
 How does it work
 ----------------
@@ -123,7 +124,7 @@ Combining Haskell and Python
 -------------------------------
 
 In most cases you do not need to know the Haskell programming language.
-The knowledge of Python will be sufficient to create and run the simulation
+The knowledge of Python will be sufficient to create and run many simulation
 models. But if you will need a non-standard component, for example, to simulate
 the TCP/IP protocol, then you or somebody else will have to write its
 implementation in Haskell and then create the corresponding wrapper in
@@ -133,7 +134,7 @@ There is a separation of concerns. Python is used as a high-level glue for
 combining components to build the complete simulation model, while Haskell is
 used as a high-level modeling language for writing such components.
 
-Web-site
+Website
 --------
 
 You can find a more full information on website `www.aivikasoft.com

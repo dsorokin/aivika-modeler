@@ -4,7 +4,7 @@ from simulation.aivika.modeler import *
 
 model = MainModel()
 
-# the transacts can have assignable and updatable fields, but is not shown here
+# the transacts can have assignable and updatable fields, but it is not used here
 data_type = TransactType(model, 'Transact')
 
 # we have two input random streams of different nature
@@ -18,7 +18,7 @@ input_stream  = merge_streams([input_stream1, input_stream2])
 queue = create_queue(model, data_type, 5, name = 'queue', descr = 'The input queue')
 queue_source = queue.add_result_source()
 
-# try to enqueue the input stream or remove the item if the queue is full
+# try to enqueue the input stream or remove the items when the queue is full
 enqueue_stream_or_remove_item(queue, input_stream)
 
 # the server represents some activivity that we model by random delays
