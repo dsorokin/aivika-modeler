@@ -1,5 +1,5 @@
-Aivika Modeler is a discrete event simulation modeling tool for Python
-======================================================================
+Aivika Modeler is a simulation modeling tool for Python
+=======================================================
 
 Using Aivika Modeler, you can create quite fast discrete event simulation
 models that are translated into native code. Also you can run the simulation
