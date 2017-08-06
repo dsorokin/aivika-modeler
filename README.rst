@@ -154,8 +154,8 @@ statistics sections for some properties such as the queue size, queue wait time,
 the processing time of transacts and the server processing factor
 in the final time point.
 
-How does it work
-----------------
+How It Works
+------------
 
 The model written in Python is translated into its Haskell representation
 based on using the Aivika simulation libraries, namely `aivika
