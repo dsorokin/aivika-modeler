@@ -16,11 +16,39 @@ Example
 
 To take a taste of Aivika Modeler, here is a complete simulation model and
 the corresponding experiment that define a simple queue network. The model
-contains two generators, a bounded queue, server, the arrival timer
-which measures the processing of transacts. The experiment launches
+contains a transact generator, two bounded queues, two servers and the arrival
+timer that measures the processing of transacts. The experiment launches
 1000 simulation runs in parallel, plots charts and then opens a report with
 the results of simulation in the Web browser. The compilation, simulation
 and chart plotting took about 1 minute on my laptop.
+
+  Example: *Work Stations in Series*
+
+  This is a model of two work stations connected in a series and separated by
+  finite queues. It is described in different sources [1, 2]. So, this is
+  chapter 7 of [2] and section 5.14 of [1].
+
+  [1] A. Alan B. Pritsker, Simulation with Visual SLAM and AweSim, 2nd ed.
+
+  [2] Труб И.И., Объектно-ориентированное моделирование на C++: Учебный курс. - СПб.: Питер, 2006
+
+  The maintenance facility of a large manufacturer performs two operations.
+  These operations must be performed in series; operation 2 always follows
+  operation 1. The units that are maintained are bulky, and space is available
+  for only eight units including the units being worked on. A proposed design
+  leaves space for two units between the work stations, and space for four units
+  before work station 1. [..] Current company policy is to subcontract
+  the maintenance of a unit if it cannot gain access to the in-house facility.
+
+  Historical data indicates that the time interval between requests for
+  maintenance is exponentially distributed with a mean of 0.4 time units.
+  Service times are also exponentially distributed with the first station
+  requiring on the average 0.25 time units and the second station, 0.5 time
+  units. Units are transported automatically from work station 1 to work
+  station 2 in a negligible amount of time. If the queue of work station 2 is
+  full, that is, if there are two units awaiting for work station 2, the first
+  station is blocked and a unit cannot leave the station. A blocked work
+  station cannot server other units.
 
 .. code:: python
 
@@ -33,67 +61,96 @@ and chart plotting took about 1 minute on my laptop.
   # the transacts can have assignable and updatable fields, but it is not used here
   data_type = TransactType(model, 'Transact')
 
-  # we have two input random streams of different nature
-  input_stream1 = uniform_random_stream(data_type, 3, 7)
-  input_stream2 = exponential_random_stream(data_type, 5)
-
-  # then merge two different streams to create a new combined stream
-  input_stream  = merge_streams([input_stream1, input_stream2])
-
-  # this is the bounded queue with capacity = 5
-  queue = create_queue(model, data_type, 5, name = 'queue', descr = 'The input queue')
-  queue_source = queue.add_result_source()
-
-  # try to enqueue the input stream or remove the items when the queue is full
-  enqueue_stream_or_remove_item(queue, input_stream)
-
-  # the server represents some activivity that we model by random delays
-  server = exponential_random_server(data_type, 2, name = 'server', descr = 'The server')
-  server_source = server.add_result_source()
-
-  # it measures the processing time of transacts
-  timer = create_arrival_timer(model, name = 'arrivalTimer', descr = 'The arrival timer')
+  # it will help us to measure the processing time of transacts
+  timer = create_arrival_timer(model, name = 'timer', descr = 'Measures the processing time')
   timer_source = timer.add_result_source()
 
-  # now we create an output stream that originates from the queue
-  output_stream1 = dequeue_stream(queue)
-  output_stream2 = server_stream(server, output_stream1)
-  output_stream  = arrival_timer_stream(timer, output_stream2)
+  # this is a generator of transacts
+  input_stream = exponential_random_stream(data_type, 0.4)
 
-  # this is a terminator which may be considered as a motor of the entire model
-  terminate_stream(output_stream)
+  # a queue before the first workstation
+  queue1 = create_queue(model, data_type, 4, name = 'queue1', descr = 'Queue no. 1')
+  queue1_source = queue1.add_result_source()
 
-  # reset the statistics at t = 150
-  reset_queue(queue, 150)
-  reset_server(server, 150)
-  reset_arrival_timer(timer, 150)
+  # another queue before the second workstation
+  queue2 = create_queue(model, data_type, 2, name = 'queue2', descr = 'Queue no. 2')
+  queue2_source = queue2.add_result_source()
 
-  specs = Specs(0, 480, 0.1)
+  # the first workstation activity is modeled by the server
+  workstation1 = exponential_random_server(data_type, 0.25, name = 'workstation1', descr = 'Workstation no. 1')
+  workstation1_source = workstation1.add_result_source()
 
+  # this is the second workstation
+  workstation2 = exponential_random_server(data_type, 0.5, name = 'workstation2', descr = 'Workstation no. 2')
+  workstation2_source = workstation2.add_result_source()
+
+  # try to enqueue the arrivals; otherwise, count them as lost
+  enqueue_stream_or_remove_item(queue1, input_stream)
+
+  # a chain of streams originated from the first queue
+  stream2 = dequeue_stream(queue1)
+  stream3 = server_stream(workstation1, stream2)
+  enqueue_stream(queue2, stream3)
+
+  # another chain of streams, which must be terminated already
+  stream4 = dequeue_stream(queue2)
+  stream5 = server_stream(workstation2, stream4)
+  stream5 = arrival_timer_stream(timer, stream5)
+  terminate_stream(stream5)
+
+  # reset the statistics after 30 time units
+  reset_time = 30
+  reset_queue(queue1, 0)
+  reset_queue(queue2, 0)
+  reset_server(workstation1, 0)
+  reset_server(workstation2, 0)
+  reset_arrival_timer(timer, 0)
+
+  # it defines the simulation specs
+  specs = Specs(0 - reset_time, 300, 0.1)
+
+  processing_factors = [workstation1_source.processing_factor,
+      workstation2_source.processing_factor]
+
+  # define what to display in the report
   views = [ExperimentSpecsView(),
-           InfoView(series = [timer_source, queue_source, server_source]),
-           DeviationChartView(left_y_series = [timer_source.processing_time],
-                              right_y_series = [queue_source.count]),
-           DeviationChartView(right_y_series = [queue_source.enqueue_lost_count]),
-           DeviationChartView(right_y_series = [server_source.processing_factor]),
-           FinalStatsView(series = [queue_source.count_stats,
-                                    queue_source.wait_time,
-                                    timer_source.processing_time,
-                                    server_source.processing_time,
-                                    server_source.processing_factor])]
+           InfoView(),
+           FinalStatsView(title = 'Processing Time (Statistics Summary)',
+              series = [timer_source.processing_time]),
+           DeviationChartView(title = 'Processing Factor (Chart)',
+              right_y_series = processing_factors),
+           FinalHistogramView(title = 'Processing Factor (Histogram)',
+              series = processing_factors),
+           FinalStatsView(title = 'Processing Factor (Statistics Summary)',
+              series = processing_factors),
+           FinalStatsView(title = 'Lost Items (Statistics Summary)',
+              series = [queue1_source.enqueue_lost_count]),
+           DeviationChartView(title = 'Queue Size (Chart)',
+              right_y_series = [queue1_source.count,
+                                queue2_source.count]),
+           FinalStatsView(title = 'Queue Size (Statistics Summary)',
+              series = [queue1_source.count_stats,
+                        queue2_source.count_stats]),
+           DeviationChartView(title = 'Queue Wait Time (Chart)',
+              right_y_series = [queue1_source.wait_time,
+                                queue2_source.wait_time]),
+           FinalStatsView(title = 'Queue Wait Time (Statistics Summary)',
+              series = [queue1_source.wait_time,
+                        queue2_source.wait_time])]
 
+  # it will render the report
   renderer = ExperimentRendererUsingDiagrams(views)
 
-  # as the simulation is quite fast, we can run 1000 simulation experiments
+  # it defines the simulation experiment with 1000 runs
   experiment = Experiment(renderer, run_count = 1000)
 
-  # it runs the simulation experiment by the Monte Carlo method
+  # it compiles the model and runs the simulation experiment
   model.run(specs, experiment)
 
 After running the simulation experiment, you will see the Deviation charts
 that will show the confidence intervals by rule 3 sigma. Also you will see
-a general information about the experiment as well as a summary statistics
-for some properties such as the queue size, queue wait time,
+a general information about the experiment as well as histograms and summary
+statistics sections for some properties such as the queue size, queue wait time,
 the processing time of transacts and the server processing factor
 in the final time point.
 
