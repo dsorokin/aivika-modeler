@@ -4,11 +4,11 @@ Aivika Modeler is a simulation modeling tool for Python
 Using Aivika Modeler, you can create quite fast discrete event simulation
 models that are translated into native code. Also you can run the simulation
 experiments by the Monte Carlo method, specifying that how the results should
-be processed. It can plot Time Series, Deviation Chart by the confidence
+be processed. It can plot Time Series, Deviation chart by the confidence
 interval, plot histograms, save the results in the CSV files for the
 further analysis and more. All is defined in just a few lines of code written
 in Python. Then the report of the simulation experiment with charts, statistics
-summary and links to the saved CSV files are automatically opened in your Web
+summary and links to the saved CSV files is automatically opened in your Web
 browser.
 
 Example
