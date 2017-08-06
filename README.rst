@@ -7,7 +7,7 @@ experiments by the Monte Carlo method, specifying that how the results should
 be processed. It can plot Time Series, Deviation Chart by the confidence
 interval, plot histograms, save the results in the CSV files for the
 further analysis and more. All is defined in just a few lines of code written
-in Python. Then the results of the simulation experiment with charts, statistics
+in Python. Then the report of the simulation experiment with charts, statistics
 summary and links to the saved CSV files are automatically opened in your Web
 browser.
 
