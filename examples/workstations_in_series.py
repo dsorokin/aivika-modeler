@@ -37,26 +37,31 @@ model = MainModel()
 data_type = TransactType(model, 'Transact')
 
 # it will help us to measure the processing time of transacts
-timer = create_arrival_timer(model, name = 'timer', descr = 'Measures the processing time')
+timer = create_arrival_timer(model,
+    name = 'timer', descr = 'Measures the processing time')
 timer_source = timer.add_result_source()
 
 # this is a generator of transacts
 input_stream = exponential_random_stream(data_type, 0.4)
 
 # a queue before the first workstation
-queue1 = create_queue(model, data_type, 4, name = 'queue1', descr = 'Queue no. 1')
+queue1 = create_queue(model, data_type, 4,
+    name = 'queue1', descr = 'Queue no. 1')
 queue1_source = queue1.add_result_source()
 
 # another queue before the second workstation
-queue2 = create_queue(model, data_type, 2, name = 'queue2', descr = 'Queue no. 2')
+queue2 = create_queue(model, data_type, 2,
+    name = 'queue2', descr = 'Queue no. 2')
 queue2_source = queue2.add_result_source()
 
 # the first workstation activity is modeled by the server
-workstation1 = exponential_random_server(data_type, 0.25, name = 'workstation1', descr = 'Workstation no. 1')
+workstation1 = exponential_random_server(data_type, 0.25,
+    name = 'workstation1', descr = 'Workstation no. 1')
 workstation1_source = workstation1.add_result_source()
 
 # this is the second workstation
-workstation2 = exponential_random_server(data_type, 0.5, name = 'workstation2', descr = 'Workstation no. 2')
+workstation2 = exponential_random_server(data_type, 0.5,
+    name = 'workstation2', descr = 'Workstation no. 2')
 workstation2_source = workstation2.add_result_source()
 
 # try to enqueue the arrivals; otherwise, count them as lost
