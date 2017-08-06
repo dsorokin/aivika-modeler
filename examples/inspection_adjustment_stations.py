@@ -45,33 +45,33 @@ specs = Specs(0, 480, 0.1)
 
 input_arrival_timer = create_arrival_timer(model,
     name = 'input_arrival_timer', descr = 'Measures the Input')
-input_arrival_timer.add_result_source()
+input_arrival_timer_source = input_arrival_timer.add_result_source()
 
 output_arrival_timer = create_arrival_timer(model,
     name = 'output_arrival_timer', descr = 'Measures the Output')
-output_arrival_timer.add_result_source()
+output_arrival_timer_source = output_arrival_timer.add_result_source()
 
 input_stream = uniform_random_stream(transact_type, 3.5, 7.5)
 
 inspection_queue = create_unbounded_queue(model, transact_type,
     name = 'inspection_queue', descr = 'Inspection Queue')
-inspection_queue.add_result_source()
+inspection_queue_source = inspection_queue.add_result_source()
 
 adjustment_queue = create_unbounded_queue(model, transact_type,
     name = 'adjustment_queue', descr = 'Adjustment Queue')
-adjustment_queue.add_result_source()
+adjustment_queue_source = adjustment_queue.add_result_source()
 
 inspection_station_1 = uniform_random_server(transact_type, 6.0, 12.0,
     name = 'inspection_station_1', descr = 'Inspection Station no. 1')
-inspection_station_1.add_result_source()
+inspection_station_1_source = inspection_station_1.add_result_source()
 
 inspection_station_2 = uniform_random_server(transact_type, 6.0, 12.0,
     name = 'inspection_station_2', descr = 'Inspection Station no. 2')
-inspection_station_2.add_result_source()
+inspection_station_2_source = inspection_station_2.add_result_source()
 
 adjustment_station = uniform_random_server(transact_type, 20.0, 40.0,
     name = 'adjustment_station', descr = 'Adjustment Station')
-adjustment_station.add_result_source()
+adjustment_station_source = adjustment_station.add_result_source()
 
 s01 = unbounded_dequeue_stream(inspection_queue)
 (s02_1, s02_2) = split_stream(2, s01)
@@ -96,4 +96,47 @@ s07 = arrival_timer_stream(input_arrival_timer, input_stream)
 
 unbounded_enqueue_stream(inspection_queue, s07)
 
-model.run(specs)
+processing_times = [input_arrival_timer_source.processing_time,
+    output_arrival_timer_source.processing_time]
+
+processing_factors = [adjustment_station_source.processing_factor,
+    inspection_station_1_source.processing_factor,
+    inspection_station_2_source.processing_factor]
+
+views = [ExperimentSpecsView(),
+         InfoView(),
+         FinalStatsView(title = 'Arrivals', series = processing_times),
+         DeviationChartView(title = 'Processing Factor (Chart)',
+            width = 1000, right_y_series = processing_factors),
+         HistogramView(title = 'Processing Factor (Histogram)',
+            width = 1000, series = processing_factors),
+         FinalStatsView(title = 'Processing Factor (Statistics Summary)',
+            series = processing_factors),
+         DeviationChartView(title = 'Inspection Queue Size (Chart)',
+            width = 1000,
+            right_y_series = [inspection_queue_source.count,
+                             inspection_queue_source.count_stats]),
+         FinalStatsView(title = 'Inspection Queue Size (Statistics Summary)',
+            series = [inspection_queue_source.count_stats]),
+         DeviationChartView(title = 'Inspection Queue Wait Time (Chart)',
+            width = 1000,
+            right_y_series = [inspection_queue_source.wait_time]),
+         FinalStatsView(title = 'Adjustment Queue Wait Time (Statistics Summary)',
+            series = [adjustment_queue_source.wait_time]),
+         DeviationChartView(title = 'Adjustment Queue Size (Chart)',
+            width = 1000,
+            right_y_series = [adjustment_queue_source.count,
+                              adjustment_queue_source.count_stats]),
+         FinalStatsView(title = 'Adjustment Queue Size (Statistics Summary)',
+            series = [adjustment_queue_source.count_stats]),
+         DeviationChartView(title = 'Adjustment Queue Wait Time (Chart)',
+            width = 1000,
+            right_y_series = [adjustment_queue_source.wait_time]),
+         FinalStatsView(title = 'Adjustment Queue Wait Time (Statistics Summary)',
+            series = [adjustment_queue_source.wait_time])]
+
+renderer = ExperimentRendererUsingDiagrams(views)
+
+experiment = Experiment(renderer, run_count = 1000)
+
+model.run(specs, experiment)
