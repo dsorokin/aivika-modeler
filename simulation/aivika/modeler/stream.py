@@ -203,6 +203,20 @@ def hold_stream(expr, stream_port):
     s.bind_to_output()
     return y
 
+def prefetch_stream(stream_port):
+    """Prefetch the input stream requesting for one more data item in advance while the last received item is not yet fully processed in the chain of streams."""
+    s = stream_port
+    expect_stream(stream_port)
+    model = s.get_model()
+    item_data_type = s.get_item_data_type()
+    code = 'return $ prefetchStream '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
 def trace_stream(stream_port, request_message = None, response_message = None):
     """Allows tracing the input stream within the resulting stream."""
     s = stream_port

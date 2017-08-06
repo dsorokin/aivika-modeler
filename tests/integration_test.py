@@ -190,7 +190,8 @@ port21b = within_stream(write_ref(ref, return_expr(model, 9.1)), port21a)
 port21c = trace_stream(port21b)
 port21d = trace_stream(port21c, request_message = 'Request')
 port21e = trace_stream(port21d, request_message = 'Request', response_message = 'Response')
-port21 = port21e
+port21f = prefetch_stream(port21e)
+port21  = port21f
 
 terminate_stream(port21)
 
