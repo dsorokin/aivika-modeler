@@ -89,4 +89,4 @@ class ExperimentRendererUsingDiagrams(ChartingExperimentRenderer):
         file.write('     putStrLn "Started running the simulation and saving the results..."\n')
         file.write('     let renderer = DiagramsRenderer SVG (return fonts)\n')
         file.write('         path     = WritableFilePath ' + encode_str(experiment.get_path()) + '\n')
-        file.write('     runExperiment experiment generators (WebPageRenderer renderer path) model\n')
+        file.write('     runExperimentParallel experiment generators (WebPageRenderer renderer path) model\n')
