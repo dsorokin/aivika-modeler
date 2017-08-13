@@ -7,6 +7,8 @@ from simulation.aivika.modeler.transform import *
 
 UNIT_TYPE = '()'
 
+UNIT = '()'
+
 STRING_TYPE = 'String'
 
 DOUBLE_TYPE = 'Double'
@@ -277,3 +279,10 @@ def _encode_data_type_item(data_type_item):
         return data_type_item.get_name()
     else:
         raise InvalidDataTypeException('Expected a legal data type: ' + str(data_type_item))
+
+def arriving_time_expr(data_type):
+    """Get an expression that returns the arriving time of the transact."""
+    expect_transact_type(data_type)
+    model = data_type.get_model()
+    code = '(return . arrivalTime)'
+    return Expr(model, code)

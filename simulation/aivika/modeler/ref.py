@@ -17,7 +17,7 @@ def create_ref(model, init_value, item_data_type, name, descr = None):
     if not (base_comp is None):
         comp_type.append(base_comp)
     comp_type.append(y.get_data_type())
-    code = 'newRef ' + str(init_value) + ' :: ' + encode_data_type(comp_type)
+    code = 'newRef (' + str(init_value) + ') :: ' + encode_data_type(comp_type)
     y.write(code)
     return y
 
@@ -40,3 +40,19 @@ def write_ref(ref_port, expr):
     model = r.get_model()
     code = '(\\a -> ' + e.read('a') + ' >>= writeRef ' + r.read() + ')'
     return Expr(model, code)
+
+def inc_ref(ref_port, increment_expr = 1):
+    """Return an expression that increases the reference contents."""
+    r = ref_port
+    n = increment_expr
+    expect_ref(r)
+    model = r.get_model()
+    return write_ref(r, binary_expr(read_ref(r), '+', n))
+
+def dec_ref(ref_port, decrement_expr = 1):
+    """Return an expression that decreases the reference contents."""
+    r = ref_port
+    n = decrement_expr
+    expect_ref(r)
+    model = r.get_model()
+    return write_ref(r, binary_expr(read_ref(r), '-', n))

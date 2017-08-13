@@ -79,8 +79,7 @@ s03_1 = server_stream(inspection_station_1, s02_1)
 s03_2 = server_stream(inspection_station_2, s02_2)
 s04 = merge_streams([s03_1, s03_2])
 
-test_expr = binary_expr(uniform_random_expr(model, 0.0, 1.0), '<=',
-    return_expr(model, 0.85))
+test_expr = uniform_random_expr(model, 0.0, 1.0) <= 0.85
 
 (passed_stream, failed_stream) = test_stream(test_expr, s04)
 

@@ -24,6 +24,23 @@ def empty_stream(model, item_data_type):
     y.write('return emptyStream :: ' + encode_data_type(comp_type))
     return y
 
+def singleton_stream(model, item, item_data_type):
+    """Return a stream consisting of exactly one element and inifinite tail."""
+    base_comp = model.get_base_comp()
+    y = StreamPort(model, item_data_type)
+    comp_type = []
+    comp_type.append('Simulation')
+    if not (base_comp is None):
+        comp_type.append(base_comp)
+    comp_type.append(y.get_data_type())
+    code = 'return (singletonStream '
+    code += str(item)
+    code += ') :: '
+    code += encode_data_type(comp_type)
+    y.bind_to_input()
+    y.write(code)
+    return y
+
 def terminate_stream(stream_port):
     """Terminate the stream."""
     s = stream_port
@@ -33,15 +50,16 @@ def terminate_stream(stream_port):
     s.bind_to_output()
     model.add_action(code)
 
-def delay_stream(delay_interval, stream_port):
-    """Delay the stream by the specified delay interval and return a new stream."""
+def delay_stream(delay_item, stream_port):
+    """Delay the stream by one step using the specified initial value.."""
+    i = delay_item
     s = stream_port
     expect_stream(s)
     model = s.get_model()
     item_data_type = s.get_item_data_type()
-    code = 'return $ mapStreamM (\\a -> do { holdProcess '
-    code += str(delay_interval)
-    code += '; return a }) '
+    code = 'return $ delayStream '
+    code += str(delay_item)
+    code += ' '
     code += s.read()
     y = StreamPort(model, item_data_type)
     y.write(code)
@@ -193,9 +211,9 @@ def hold_stream(expr, stream_port):
     if model.get_main_model() != e.get_model().get_main_model():
         raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
     item_data_type = s.get_item_data_type()
-    code = 'return $ mapStreamM (\\a -> do { dt <- liftEvent $ '
+    code = 'return $ mapStreamM (\\a -> do { dt0 <- liftEvent $ '
     code += e.read('a')
-    code += '; holdProcess dt; return a }) '
+    code += '; holdProcess dt0; return a }) '
     code += s.read()
     y = StreamPort(model, item_data_type)
     y.write(code)
@@ -210,6 +228,98 @@ def prefetch_stream(stream_port):
     model = s.get_model()
     item_data_type = s.get_item_data_type()
     code = 'return $ prefetchStream '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
+def filter_stream(expr, stream_port):
+    """Filter only those data values that satisfy to the specified predicate."""
+    e = expr
+    s = stream_port
+    expect_expr(e)
+    expect_stream(stream_port)
+    model = s.get_model()
+    if model.get_main_model() != e.get_model().get_main_model():
+        raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
+    item_data_type = s.get_item_data_type()
+    code = 'return $ filterStreamM (\\a -> liftEvent $ '
+    code += e.read('a')
+    code += ') '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
+def take_stream_while(expr, stream_port):
+    """Return the longest prefix of the stream of elements that satisfy the predicate."""
+    e = expr
+    s = stream_port
+    expect_expr(e)
+    expect_stream(stream_port)
+    model = s.get_model()
+    if model.get_main_model() != e.get_model().get_main_model():
+        raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
+    item_data_type = s.get_item_data_type()
+    code = 'return $ takeStreamWhileM (\\a -> liftEvent $ '
+    code += e.read('a')
+    code += ') '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
+def drop_stream_while(expr, stream_port):
+    """Return the suffix of the stream of elements remaining after *take_stream_while*."""
+    e = expr
+    s = stream_port
+    expect_expr(e)
+    expect_stream(stream_port)
+    model = s.get_model()
+    if model.get_main_model() != e.get_model().get_main_model():
+        raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
+    item_data_type = s.get_item_data_type()
+    code = 'return $ dropStreamWhileM (\\a -> liftEvent $ '
+    code += e.read('a')
+    code += ') '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
+def take_stream(count, stream_port):
+    """Return the prefix of the stream of the specified length."""
+    s = stream_port
+    expect_stream(stream_port)
+    model = s.get_model()
+    item_data_type = s.get_item_data_type()
+    code = 'return $ takeStream '
+    code += str(count)
+    code += ' '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
+def drop_stream(count, stream_port):
+    """Return the suffix of the stream after the specified first elements."""
+    s = stream_port
+    expect_stream(stream_port)
+    model = s.get_model()
+    item_data_type = s.get_item_data_type()
+    code = 'return $ dropStream '
+    code += str(count)
+    code += ' '
     code += s.read()
     y = StreamPort(model, item_data_type)
     y.write(code)

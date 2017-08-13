@@ -64,6 +64,27 @@ def request_resource(resource_port, stream_port):
     s.bind_to_output()
     return y
 
+def request_resource_in_parallel(resource_port, stream_port):
+    """Request for the resource in parallel without delaying the current stream of data."""
+    r = resource_port
+    s = stream_port
+    expect_resource(r)
+    expect_stream(s)
+    expect_same_model([r, s])
+    if r.priority_queue_strategy:
+        raise InvalidPortException('Expected port ' + r.get_name() + ' to have a non-priority queue strategy: ' + r.queue_strategy)
+    model = r.get_model()
+    item_data_type = s.get_item_data_type()
+    code = 'return $ mapStreamM (\\a -> do { liftEvent $ runProcess $ R.requestResource '
+    code += r.read()
+    code += '; return a }) '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
 def request_resource_with_priority(resource_port, priority_expr, stream_port):
     """Request for the resource with priority when processing the specified stream within the resulting stream.
 
@@ -92,6 +113,34 @@ def request_resource_with_priority(resource_port, priority_expr, stream_port):
     s.bind_to_output()
     return y
 
+def request_resource_with_priority_in_parallel(resource_port, priority_expr, stream_port):
+    """Request for the resource with priority in parallel without delaying the current stream of data.
+
+       The less priority is higher. The priority must be specified as the Expr instance.
+
+       Also the resource must have the StaticPriorities queue strategy.
+    """
+    r = resource_port
+    s = stream_port
+    expect_resource(r)
+    expect_stream(s)
+    expect_same_model([r, s])
+    if not r.priority_queue_strategy:
+        raise InvalidPortException('Expected port ' + r.get_name() + ' to have a priority queue strategy: ' + r.queue_strategy)
+    model = r.get_model()
+    item_data_type = s.get_item_data_type()
+    code = 'return $ mapStreamM (\\a -> do { p <- liftEvent $ '
+    code += priority_expr.read('a')
+    code += '; liftEvent $ runProcess $ R.requestResourceWithPriority '
+    code += r.read()
+    code += ' p; return a }) '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
 def release_resource(resource_port, stream_port):
     """Release the resource when processing the specified stream within the resulting stream."""
     r = resource_port
@@ -104,6 +153,56 @@ def release_resource(resource_port, stream_port):
     code = 'return $ mapStreamM (\\a -> do { R.releaseResource '
     code += r.read()
     code += '; return a }) '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
+def inc_resource(resource_port, expr, stream_port):
+    """Increase the count of available resource by the specified number, invoking the awaiting processes as needed."""
+    r = resource_port
+    e = expr
+    s = stream_port
+    expect_resource(r)
+    expect_expr(e)
+    expect_stream(s)
+    expect_same_model([r, s])
+    model = r.get_model()
+    if model.get_main_model() != e.get_model().get_main_model():
+        raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
+    item_data_type = s.get_item_data_type()
+    code = 'return $ mapStreamM (\\a -> do { n <- liftEvent $ '
+    code += e.read('a')
+    code += '; liftEvent $ R.incResourceCount '
+    code += r.read()
+    code += ' n; return a }) '
+    code += s.read()
+    y = StreamPort(model, item_data_type)
+    y.write(code)
+    y.bind_to_input()
+    s.bind_to_output()
+    return y
+
+def dec_resource(resource_port, expr, stream_port):
+    """Decrease the count of available resource by the specified number, waiting for the processes capturing the resource as needed."""
+    r = resource_port
+    e = expr
+    s = stream_port
+    expect_resource(r)
+    expect_expr(e)
+    expect_stream(s)
+    expect_same_model([r, s])
+    model = r.get_model()
+    if model.get_main_model() != e.get_model().get_main_model():
+        raise InvalidPortException('Expected both the stream ' + s.get_name() + ' and the expression to belong to the same model')
+    item_data_type = s.get_item_data_type()
+    code = 'return $ mapStreamM (\\a -> do { n <- liftEvent $ '
+    code += e.read('a')
+    code += '; R.decResourceCount '
+    code += r.read()
+    code += ' n; return a }) '
     code += s.read()
     y = StreamPort(model, item_data_type)
     y.write(code)
