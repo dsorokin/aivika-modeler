@@ -131,6 +131,10 @@ review_stream = within_stream(write_ref(safety_stock,
 review_stream = inc_resource(radio, read_ref(order_qty), review_stream)
 terminate_stream(review_stream)
 
+reset_resource(radio, 52)
+enqueue_expr(52, write_ref(safety_stock, return_expr(model, EMPTY_SAMPLING_STATS)))
+enqueue_expr(52, write_ref(tb_lost_sales, return_expr(model, EMPTY_SAMPLING_STATS)))
+
 # it defines the simulation specs
 specs = Specs(0, 312, 0.1)
 
