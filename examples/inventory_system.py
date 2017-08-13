@@ -134,5 +134,27 @@ terminate_stream(review_stream)
 # it defines the simulation specs
 specs = Specs(0, 312, 0.1)
 
+# define what to display in the report
+views = [ExperimentSpecsView(),
+         InfoView(),
+         FinalStatsView(title = 'Inventory Position and Time Between Lost Sales (Statistics Summary)',
+            series = [inv_pos_source, tb_lost_sales_source]),
+         DeviationChartView(title = 'Radio and Inventory Position (Chart)',
+            right_y_series = [radio_source.count, inv_pos_source]),
+         DeviationChartView(title = 'Radio (Chart)',
+            right_y_series = [radio_source.count, radio_source.count_stats]),
+         DeviationChartView(title = 'Inventory Position (Chart)',
+            right_y_series = [inv_pos_source]),
+         DeviationChartView(title = 'Safety Stock (Chart)',
+            right_y_series = [safety_stock_source]),
+         FinalStatsView(title = 'Safety Stock (Statistics Summary)',
+            series = [safety_stock_source])]
+
+# it will render the report
+renderer = ExperimentRendererUsingDiagrams(views)
+
+# it defines the simulation experiment with 1000 runs
+experiment = Experiment(renderer, run_count = 1000)
+
 # it compiles the model and runs the simulation experiment
-model.run(specs)
+model.run(specs, experiment)
