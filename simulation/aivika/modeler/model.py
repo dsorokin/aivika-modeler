@@ -280,7 +280,7 @@ class SubModel(Model):
         self._main_model = model.get_main_model()
         self._model = model
         self._name = name
-        self._var_prefix = '_sub_' + str(SubModel._next_id) + '_'
+        self._var_prefix = '_sub_' + str(SubModel._next_id)
         SubModel._next_id += 1
         if (name is None) or model.is_source_prefix_mangled():
             self._source_prefix_mangled = True
@@ -309,7 +309,7 @@ class SubModel(Model):
         """Whether the source name prefix is mangled."""
         return self._source_prefix_mangled
 
-    def get_source_name_prefix(self):
+    def get_source_prefix(self):
         """Return the source name prefix."""
         return self._source_prefix
 
