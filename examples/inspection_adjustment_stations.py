@@ -1,4 +1,5 @@
 #!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
 
 # Example: Inspection and Adjustment Stations on a Production Line
 #

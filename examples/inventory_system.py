@@ -1,4 +1,5 @@
 #!/usr/local/bin/python3
+# -*- coding: utf-8 -*-
 
 # Example: Inventory System with Lost Sales and Backorders
 #
