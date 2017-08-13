@@ -1,7 +1,7 @@
 #!/usr/local/bin/python3
 
 # NOTE: The model itself is quite meaningless. The purpose is
-#       to check all possible cases. Consider it like an unit-test
+#       to check some features. Consider it like an unit-test
 
 from simulation.aivika.modeler import *
 
