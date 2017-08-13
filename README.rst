@@ -182,6 +182,12 @@ The main operating systems are supported: Windows, Linux and macOS.
 
 Then you can install the ``aivika-modeler`` package using *pip* in usual way.
 
+License
+-------
+
+Aivika Modeler is licensed under the open-source BSD3 license like that how
+the main libraries of Aivika itself are licensed under this license.
+
 Combining Haskell and Python
 -------------------------------
 
@@ -200,9 +206,9 @@ GPSS
 ----
 
 Aivika itself also supports a DSL, which is very similar to the popular GPSS
-modeling language but not fully equivalent, though. This DSL is implemented in 
-package `aivika-gpss <http://hackage.haskell.org/package/aivika-gpss>`_. 
-There are plans to add the corresponding support to Aivika Modeler too. 
+modeling language but not fully equivalent, though. This DSL is implemented in
+package `aivika-gpss <http://hackage.haskell.org/package/aivika-gpss>`_.
+There are plans to add the corresponding support to Aivika Modeler too.
 Please stay tuned.
 
 Website
