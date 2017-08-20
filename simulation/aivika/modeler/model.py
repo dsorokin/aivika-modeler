@@ -4,7 +4,12 @@
 
 import os
 
-from simulation.aivika.modeler.model_project import *
+from simulation.aivika.modeler.model_project import generate_cabal_file_impl
+from simulation.aivika.modeler.model_project import generate_stack_file_impl
+from simulation.aivika.modeler.model_project import generate_license_file_impl
+from simulation.aivika.modeler.model_project import generate_readme_file_impl
+from simulation.aivika.modeler.model_project import generate_setup_file_impl
+from simulation.aivika.modeler.model_project import generate_lib_file_impl
 
 class ModelException(Exception):
     """Raised when something is invalid when creating or processing the model."""

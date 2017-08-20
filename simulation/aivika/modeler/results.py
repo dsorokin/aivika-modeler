@@ -32,7 +32,18 @@ class RawSource(ResultSource):
         return self._code
 
 class SamplingStatsSource(ResultSource):
-    """The result source for observation statistics based on samples."""
+    """The result source for observation statistics based on samples.
+
+       It supports the following properties:
+
+       * ``count`` - the total number of samples;
+       * ``min_value`` - the minimum value;
+       * ``max_value`` - the maximum value;
+       * ``mean_value`` - the average value;
+       * ``mean2_value`` - the average square value;
+       * ``variance`` - the variance value;
+       * ``deviation`` - the deviation value.
+    """
 
     def __init__(self, source):
         """Initializes a new instance by the specified result source."""
@@ -63,7 +74,23 @@ class SamplingStatsSource(ResultSource):
         return RawSource(code)
 
 class TimingStatsSource(ResultSource):
-    """The result source for time-persistent statistics."""
+    """The result source for time-persistent statistics.
+
+       It supports the following properties:
+
+       * ``count`` - the total number of samples (much less useful for this kind of statistics);
+       * ``min_value`` - the minimum value;
+       * ``max_value`` - the maximum value;
+       * ``mean_value`` - the average value;
+       * ``variance`` - the variance value;
+       * ``deviation`` - the deviation value;
+       * ``min_time`` - the time at which the minimum is attained;
+       * ``max_time`` - the time at which the maximum is attained;
+       * ``start_time`` - the start time of sampling;
+       * ``last_time`` - the last time of sampling;
+       * ``sum_value`` - the sum of values;
+       * ``sum2_value`` - the sum of square values.
+    """
 
     def __init__(self, source):
         """Initializes a new instance by the specified result source."""

@@ -51,7 +51,7 @@ def terminate_stream(stream_port):
     model.add_action(code)
 
 def delay_stream(delay_item, stream_port):
-    """Delay the stream by one step using the specified initial value.."""
+    """Delay the stream by one step using the specified initial value."""
     i = delay_item
     s = stream_port
     expect_stream(s)
