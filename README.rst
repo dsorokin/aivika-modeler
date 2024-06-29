@@ -210,9 +210,3 @@ modeling language but not fully equivalent, though. This DSL is implemented in
 package `aivika-gpss <http://hackage.haskell.org/package/aivika-gpss>`_.
 There are plans to add the corresponding support to Aivika Modeler too.
 Please stay tuned.
-
-Website
---------
-
-You can find a more full information on website `www.aivikasoft.com
-<http://www.aivikasoft.com>`_.
